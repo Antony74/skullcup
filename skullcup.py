@@ -4,6 +4,11 @@
 import pymesh
 from scipy.spatial.transform import Rotation
 
+
+def transformMesh(mesh, fn):
+    return pymesh.form_mesh([fn(v) for v in mesh.vertices], mesh.faces)
+
+
 scale = 0.75
 
 initialCup = pymesh.load_mesh('/working/Coffee_Cup.A.1.stl')
@@ -17,41 +22,13 @@ skullRotationMatrix = Rotation.from_euler(
 # cupBox = pymesh.generate_box_mesh(initialCup.bbox[0], initialCup.bbox[1])
 # skullBox = pymesh.generate_box_mesh(initialSkull.bbox[0], initialSkull.bbox[1])
 
+cup = transformMesh(initialCup, lambda v: cupRotationMatrix.dot(v))
 
-def transformCupVertex(v):
-    # rotate
-    v = cupRotationMatrix.dot(v)
-
-    return v
-
-
-def transformSkullVertex(v):
-    # rotate
-    v = skullRotationMatrix.dot(v)
-
-    # scale
-    v *= scale
-
-    return v
-
-
-def translateSkullVertex(v):
-    # translate
-    v = v + [0, yAdjustment, 0]
-
-    return v
-
-
-cup = pymesh.form_mesh([transformCupVertex(v)
-                        for v in initialCup.vertices], initialCup.faces)
-
-skull = pymesh.form_mesh([transformSkullVertex(v)
-                         for v in initialSkull.vertices], initialSkull.faces)
+skull = transformMesh(initialSkull, lambda v: scale * skullRotationMatrix.dot(v))
 
 yAdjustment = cup.bbox[0][1] - skull.bbox[0][1]
 
-skull = pymesh.form_mesh([translateSkullVertex(v)
-                         for v in skull.vertices], skull.faces)
+skull = transformMesh(skull, lambda v: v + [0, yAdjustment, 0])
 
 # skullcup = pymesh.convex_hull(cup)
 # skullcup = pymesh.boolean(cup, skull, 'union', 'cork')
