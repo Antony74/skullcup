@@ -20,26 +20,31 @@ handleBoxRotationMatrix = Rotation.from_euler('z', 5, degrees=True).as_matrix()
 skullRotationMatrix = Rotation.from_euler(
     'xy', [-90, 90], degrees=True).as_matrix()
 
+# We want a box containing the handle, and a tiny sliver of cup just so we can
+# be certain we're not missing any of the handle.  Any amount of cup that doesn't
+# cut through to the cup's interior will be fine.
+handleBox = pymesh.generate_box_mesh([-70, -20, -50], [-25, 50, 50])
+
+handleBox = transformMesh(handleBox, lambda v: handleBoxRotationMatrix.dot(v))
+
 cup = transformMesh(initialCup, lambda v: cupRotationMatrix.dot(v))
+
+handle = pymesh.boolean(cup, handleBox, 'intersection', 'cork')
+handle = transformMesh(handle, lambda v: v + [-50, 0, 0])
+cupWithoutHandle = pymesh.boolean(cup, handleBox, 'difference', 'cork')
 
 skull = transformMesh(initialSkull, lambda v: scale *
                       skullRotationMatrix.dot(v))
 
+cupCenterX = (cupWithoutHandle.bbox[0][0] + cupWithoutHandle.bbox[1][0]) / 2
+skullCenterX = (skull.bbox[0][0] + skull.bbox[1][0]) / 2
+xAdjustment = cupCenterX - skullCenterX
 yAdjustment = cup.bbox[0][1] - skull.bbox[0][1]
 
-skull = transformMesh(skull, lambda v: v + [0, yAdjustment, 10])
-
-handleBox = pymesh.generate_box_mesh([-70, -20, -50], [-30, 50, 50])
-
-handleBox = transformMesh(handleBox, lambda v: handleBoxRotationMatrix.dot(v))
-
-handle = pymesh.boolean(cup, handleBox, 'intersection', 'cork')
-
-handle = transformMesh(handle, lambda v: v + [-50, 0, 0])
+skull = transformMesh(skull, lambda v: v + [xAdjustment, yAdjustment, 10])
 
 # skullcup = pymesh.convex_hull(cup)
 # skullcup = pymesh.boolean(cup, skull, 'union', 'cork')
-skullcup = pymesh.merge_meshes([cup,  # skull, handleBox, handle
-                                handle])
+skullcup = pymesh.merge_meshes([cup, skull, handle])
 
 pymesh.save_mesh('/working/skullcup.stl', skullcup)
