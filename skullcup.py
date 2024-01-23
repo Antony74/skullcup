@@ -15,7 +15,7 @@ initialCup = pymesh.load_mesh('/working/Coffee_Cup.A.1.stl')
 initialSkull = pymesh.load_mesh('/working/Scull_geant_fix02.stl')
 
 cupRotationMatrix = Rotation.from_euler('y', 180, degrees=True).as_matrix()
-handleRotationMatrix = Rotation.from_euler('z', 5, degrees=True).as_matrix()
+handleBoxRotationMatrix = Rotation.from_euler('z', 5, degrees=True).as_matrix()
 
 skullRotationMatrix = Rotation.from_euler(
     'xy', [-90, 90], degrees=True).as_matrix()
@@ -29,11 +29,11 @@ yAdjustment = cup.bbox[0][1] - skull.bbox[0][1]
 
 skull = transformMesh(skull, lambda v: v + [0, yAdjustment, 10])
 
-handleBox = pymesh.generate_box_mesh([-30, -20, -50], [-70, 50, 50])
+handleBox = pymesh.generate_box_mesh([-70, -20, -50], [-30, 50, 50])
 
-handleBox = transformMesh(handleBox, lambda v: handleRotationMatrix.dot(v))
+handleBox = transformMesh(handleBox, lambda v: handleBoxRotationMatrix.dot(v))
 
-handle = pymesh.boolean(cup, handleBox, 'difference', 'cork')
+handle = pymesh.boolean(cup, handleBox, 'intersection', 'cork')
 
 handle = transformMesh(handle, lambda v: v + [-50, 0, 0])
 
