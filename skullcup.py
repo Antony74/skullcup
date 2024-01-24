@@ -22,9 +22,10 @@ class MeshObj(object):
 
     def __sub__(self, other):
         return MeshObj(pymesh.boolean(self._mesh, other._mesh, 'difference', 'cork'))
-    
-    def convex_hull(self):
-        return MeshObj(pymesh.convex_hull(self.mesh()))
+
+
+def convex_hull(meshObj):
+    return MeshObj(pymesh.convex_hull(meshObj.mesh()))
 
 
 scale = 0.6
@@ -46,7 +47,8 @@ skullRotationMatrix = Rotation.from_euler(
 # cut through to the cup's interior will be fine.
 handle = pymesh.generate_box_mesh([-70, -20, -50], [-25, 50, 50])
 
-handle = MeshObj(transformMesh(handle, lambda v: handleBoxRotationMatrix.dot(v)))
+handle = MeshObj(transformMesh(
+    handle, lambda v: handleBoxRotationMatrix.dot(v)))
 
 cupMesh = transformMesh(cupMesh, lambda v: cupRotationMatrix.dot(v))
 
@@ -55,15 +57,16 @@ cup = MeshObj(cupMesh)
 cupWithoutHandle = (cup - handle).mesh()
 
 skullMesh = transformMesh(skullMesh, lambda v: scale *
-                      skullRotationMatrix.dot(v))
+                          skullRotationMatrix.dot(v))
 
 cupCenterX = (cupWithoutHandle.bbox[0][0] + cupWithoutHandle.bbox[1][0]) / 2
 skullCenterX = (skullMesh.bbox[0][0] + skullMesh.bbox[1][0]) / 2
 xAdjustment = cupCenterX - skullCenterX
 yAdjustment = cupMesh.bbox[0][1] - skullMesh.bbox[0][1]
 
-skull = MeshObj(transformMesh(skullMesh, lambda v: v + [xAdjustment, yAdjustment, 20]))
+skull = MeshObj(transformMesh(skullMesh, lambda v: v +
+                [xAdjustment, yAdjustment, 20]))
 
-skullcup = skull - (cup - handle).convex_hull() + cup
+skullcup = skull - convex_hull(cup - handle) + cup
 
 pymesh.save_mesh('/working/skullcup.stl', skullcup.mesh())
