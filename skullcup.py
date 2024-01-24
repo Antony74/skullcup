@@ -2,11 +2,20 @@
 # docker run -it -v .:/working pymesh/pymesh python3 /working/skullcup.py
 
 import pymesh
+from pymesh import convex_hull
 from scipy.spatial.transform import Rotation
 
 
 def transformMesh(mesh, fn):
     return pymesh.form_mesh([fn(v) for v in mesh.vertices], mesh.faces)
+
+
+def add(mesh1, mesh2):
+    return pymesh.boolean(mesh1, mesh2, 'union', 'cork')
+
+
+def subtract(mesh1, mesh2):
+    return pymesh.boolean(mesh1, mesh2, 'difference', 'cork')
 
 
 scale = 0.6
@@ -29,7 +38,7 @@ handle = transformMesh(handle, lambda v: handleBoxRotationMatrix.dot(v))
 
 cup = transformMesh(cup, lambda v: cupRotationMatrix.dot(v))
 
-cupWithoutHandle = pymesh.boolean(cup, handle, 'difference', 'cork')
+cupWithoutHandle = subtract(cup, handle)
 
 skull = transformMesh(skull, lambda v: scale *
                       skullRotationMatrix.dot(v))
@@ -39,10 +48,8 @@ skullCenterX = (skull.bbox[0][0] + skull.bbox[1][0]) / 2
 xAdjustment = cupCenterX - skullCenterX
 yAdjustment = cup.bbox[0][1] - skull.bbox[0][1]
 
-skull = transformMesh(skull, lambda v: v + [xAdjustment, yAdjustment, 10])
+skull = transformMesh(skull, lambda v: v + [xAdjustment, yAdjustment, 20])
 
-# skullcup = pymesh.convex_hull(cup)
-# skullcup = pymesh.boolean(cup, skull, 'union', 'cork')
-skullcup = pymesh.merge_meshes([cup, skull])
+skullcup = add(subtract(skull, convex_hull(subtract(cup, handle))), cup)
 
 pymesh.save_mesh('/working/skullcup.stl', skullcup)
