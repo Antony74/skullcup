@@ -4,8 +4,19 @@
 import pymesh
 from scipy.spatial.transform import Rotation
 
+# Load mesh files
+#
+# Mesh files to be place in same directory as this script
+
+# https://cults3d.com/en/3d-model/home/coffee-cup
+cupMesh = pymesh.load_mesh('/working/Coffee_Cup.A.1.stl')
+
+# https://cults3d.com/en/3d-model/various/to-make-or-not-to-make
+skullMesh = pymesh.load_mesh('/working/Scull_geant_fix02.stl')
+
 
 # Helper class
+
 class MeshObj(object):
 
     def __init__(self, mesh):
@@ -26,15 +37,9 @@ class MeshObj(object):
 def convex_hull(meshObj):
     return MeshObj(pymesh.convex_hull(meshObj.mesh()))
 
+
 def transformMesh(mesh, fn):
     return pymesh.form_mesh([fn(v) for v in mesh.vertices], mesh.faces)
-
-
-# TO DO URL
-cupMesh = pymesh.load_mesh('/working/Coffee_Cup.A.1.stl')
-
-# TO DO URL
-skullMesh = pymesh.load_mesh('/working/Scull_geant_fix02.stl')
 
 # Handle
 #
@@ -46,6 +51,7 @@ skullMesh = pymesh.load_mesh('/working/Scull_geant_fix02.stl')
 # be certain we're not missing any of the handle.  Any amount of cup that doesn't
 # cut through to the cup's interior will be fine.
 
+
 handleBoxRotationMatrix = Rotation.from_euler('z', 5, degrees=True).as_matrix()
 
 handle = pymesh.generate_box_mesh([-70, -20, -50], [-25, 50, 50])
@@ -55,7 +61,7 @@ handle = MeshObj(transformMesh(
 
 # Lip - a box containing the lip of the cup
 
-lip = MeshObj(pymesh.generate_box_mesh([-100, 50, -100], [100, 100, 100]))
+lip = MeshObj(pymesh.generate_box_mesh([-50, 40, -50], [50, 50, 50]))
 
 # Cup
 
@@ -92,5 +98,6 @@ skull = MeshObj(transformMesh(skullMesh, lambda v: v +
 # Skullcup
 
 skullcup = skull - convex_hull(cup - handle) + cup
+# skullcup = cup + lip
 
 pymesh.save_mesh('/working/skullcup.stl', skullcup.mesh())
