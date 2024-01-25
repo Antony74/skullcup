@@ -61,7 +61,7 @@ handle = MeshObj(transformMesh(
 
 # Lip - a box containing the lip of the cup
 
-lip = MeshObj(pymesh.generate_box_mesh([-50, 40, -50], [50, 50, 50]))
+lip = MeshObj(pymesh.generate_box_mesh([-70, 35, -70], [70, 50, 70]))
 
 # Cup
 
@@ -97,7 +97,7 @@ skull = MeshObj(transformMesh(skullMesh, lambda v: v +
 
 # Skullcup
 
-skullcup = skull - convex_hull(cup - handle) + cup
-# skullcup = cup + lip
+# skullcup = skull - convex_hull(cup - handle) + cup
+skullcup = MeshObj(pymesh.merge_meshes([skull.mesh(), cup.mesh(), lip.mesh()]))
 
 pymesh.save_mesh('/working/skullcup.stl', skullcup.mesh())
