@@ -5,10 +5,7 @@ import pymesh
 from scipy.spatial.transform import Rotation
 
 
-def transformMesh(mesh, fn):
-    return pymesh.form_mesh([fn(v) for v in mesh.vertices], mesh.faces)
-
-
+# Helper class
 class MeshObj(object):
 
     def __init__(self, mesh):
@@ -24,11 +21,14 @@ class MeshObj(object):
         return MeshObj(pymesh.boolean(self._mesh, other._mesh, 'difference', 'cork'))
 
 
+# Helper functions
+
 def convex_hull(meshObj):
     return MeshObj(pymesh.convex_hull(meshObj.mesh()))
 
+def transformMesh(mesh, fn):
+    return pymesh.form_mesh([fn(v) for v in mesh.vertices], mesh.faces)
 
-scale = 0.6
 
 # TO DO URL
 cupMesh = pymesh.load_mesh('/working/Coffee_Cup.A.1.stl')
@@ -36,19 +36,30 @@ cupMesh = pymesh.load_mesh('/working/Coffee_Cup.A.1.stl')
 # TO DO URL
 skullMesh = pymesh.load_mesh('/working/Scull_geant_fix02.stl')
 
-cupRotationMatrix = Rotation.from_euler('y', 180, degrees=True).as_matrix()
-handleBoxRotationMatrix = Rotation.from_euler('z', 5, degrees=True).as_matrix()
-
-skullRotationMatrix = Rotation.from_euler(
-    'xy', [-90, 90], degrees=True).as_matrix()
-
-# We want a box containing the handle, and a tiny sliver of cup just so we can
+# Handle
+#
+# We use a convex hull to 'fill' the cup and thus exclude the skull from the cup's
+# interior.  This means we have to exclude any other parts of the cup which are not
+# convex, meaning the handle and the lip of the cup.
+#
+# We want a box containing the cup's handle, and a tiny sliver of the cup just so we can
 # be certain we're not missing any of the handle.  Any amount of cup that doesn't
 # cut through to the cup's interior will be fine.
+
+handleBoxRotationMatrix = Rotation.from_euler('z', 5, degrees=True).as_matrix()
+
 handle = pymesh.generate_box_mesh([-70, -20, -50], [-25, 50, 50])
 
 handle = MeshObj(transformMesh(
     handle, lambda v: handleBoxRotationMatrix.dot(v)))
+
+# Lip - a box containing the lip of the cup
+
+lip = MeshObj(pymesh.generate_box_mesh([-100, 50, -100], [100, 100, 100]))
+
+# Cup
+
+cupRotationMatrix = Rotation.from_euler('y', 180, degrees=True).as_matrix()
 
 cupMesh = transformMesh(cupMesh, lambda v: cupRotationMatrix.dot(v))
 
@@ -56,8 +67,19 @@ cup = MeshObj(cupMesh)
 
 cupWithoutHandle = (cup - handle).mesh()
 
+# Skull
+
+# first scale skull appropriately with respect to cup, and align rotationally
+
+scale = 0.6
+
+skullRotationMatrix = Rotation.from_euler(
+    'xy', [-90, 90], degrees=True).as_matrix()
+
 skullMesh = transformMesh(skullMesh, lambda v: scale *
                           skullRotationMatrix.dot(v))
+
+# now center the skull horizantally, and have its base aligned with the base of the cup
 
 cupCenterX = (cupWithoutHandle.bbox[0][0] + cupWithoutHandle.bbox[1][0]) / 2
 skullCenterX = (skullMesh.bbox[0][0] + skullMesh.bbox[1][0]) / 2
@@ -66,6 +88,8 @@ yAdjustment = cupMesh.bbox[0][1] - skullMesh.bbox[0][1]
 
 skull = MeshObj(transformMesh(skullMesh, lambda v: v +
                 [xAdjustment, yAdjustment, 20]))
+
+# Skullcup
 
 skullcup = skull - convex_hull(cup - handle) + cup
 
