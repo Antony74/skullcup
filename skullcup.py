@@ -3,19 +3,26 @@
 
 import pymesh
 from scipy.spatial.transform import Rotation
+import sys
+
+sys.path.append('/usr/local/bin')
+
+from fix_mesh import fix_mesh  # noqa: E402
 
 # Load mesh files
 #
 # Mesh files to be place in same directory as this script
 
 # https://cults3d.com/en/3d-model/home/coffee-cup
-cupMesh = pymesh.load_mesh('/working/Coffee_Cup.A.1.stl')
+print('Loading cup')
+cupMesh = fix_mesh(pymesh.load_mesh('/working/Coffee_Cup.A.1.stl'))
 
 # https://cults3d.com/en/3d-model/various/to-make-or-not-to-make
-skullMesh = pymesh.load_mesh('/working/Scull_geant_fix02.stl')
-
+print('Loading skull')
+skullMesh = fix_mesh(pymesh.load_mesh('/working/Scull_geant_fix02.stl'))
 
 # Helper class
+
 
 class MeshObj(object):
 
@@ -97,7 +104,8 @@ skull = MeshObj(transformMesh(skullMesh, lambda v: v +
 
 # Skullcup
 
+skullcup = cup
 # skullcup = skull - convex_hull(cup - handle) + cup
-skullcup = MeshObj(pymesh.merge_meshes([skull.mesh(), cup.mesh(), lip.mesh()]))
+# skullcup = MeshObj(pymesh.merge_meshes([skull.mesh(), cup.mesh(), lip.mesh()]))
 
 pymesh.save_mesh('/working/skullcup.stl', skullcup.mesh())
