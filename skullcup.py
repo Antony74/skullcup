@@ -57,6 +57,8 @@ def fix_mesh(mesh, detail="normal"):
     # print("Target resolution: {} mm".format(target_len))
 
     # count = 0
+    print('remove_duplicated_vertices')
+    mesh, __ = pymesh.remove_duplicated_vertices(mesh)
     print('remove_degenerated_triangles')
     mesh, __ = pymesh.remove_degenerated_triangles(mesh, 100)
     print('split_long_edges')
@@ -75,7 +77,6 @@ def fix_mesh(mesh, detail="normal"):
     #     count += 1
     #     if count > 10:
     #         break
-
     print('resolve_self_intersection')
     mesh = pymesh.resolve_self_intersection(mesh)
     print('remove_duplicated_faces')
@@ -118,9 +119,6 @@ else:
     print('Fixing skull')
     skullMesh = fix_mesh(skullMesh)
     pymesh.save_mesh(filenameSkull, skullMesh)
-
-exit
-
 
 # Handle
 #
@@ -189,8 +187,12 @@ print('Combining to create skullcup')
 
 skullcup = skull - (convex_hull(cup - handle - lip) - cup) + cup
 
-# print('Fixing skullcup')
+print('Fixing skullcup')
 
-# skullcup = fix_mesh(skullcup.mesh())
+skullcup = fix_mesh(skullcup.mesh())
+
+print('Saving skullcup')
 
 pymesh.save_mesh('/working/skullcup.stl', skullcup)
+
+print('Done')
