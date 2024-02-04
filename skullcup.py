@@ -185,7 +185,7 @@ skull = MeshObj('skull', transformMesh(skullMesh, lambda v: v +
 
 print('Combining to create skullcup')
 
-skullcup = skull - (convex_hull(cup - handle - lip) - cup) + cup
+skullcup = skull - lip - (convex_hull(cup - handle - lip) - cup) + cup
 
 print('Fixing skullcup')
 
