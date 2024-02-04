@@ -4,7 +4,6 @@
 from pathlib import Path
 import pymesh
 from scipy.spatial.transform import Rotation
-import sys
 from numpy.linalg import norm
 
 
@@ -13,23 +12,33 @@ from numpy.linalg import norm
 
 class MeshObj(object):
 
-    def __init__(self, mesh):
+    def __init__(self, name, mesh):
+        self.name = name
         self._mesh = mesh
 
     def mesh(self):
         return self._mesh
 
     def __add__(self, other):
-        return MeshObj(pymesh.boolean(self._mesh, other._mesh, 'union'))
+        name = self.name + ' + ' + other.name
+        print(name)
+        return MeshObj('(' + name + ')', pymesh.boolean(self._mesh, other._mesh, 'union'))
 
     def __sub__(self, other):
-        return MeshObj(pymesh.boolean(self._mesh, other._mesh, 'difference'))
+        name = self.name + ' - ' + other.name
+        print(name)
+        return MeshObj('(' + name + ')', pymesh.boolean(self._mesh, other._mesh, 'difference'))
 
 
 # Helper functions
 
 def convex_hull(meshObj):
-    return MeshObj(pymesh.convex_hull(meshObj.mesh()))
+    name = 'convex_hull' + \
+        meshObj.name if meshObj.name[0] == '(' else 'convex_hull(' + \
+        meshObj.name + ')'
+    
+    print(name)
+    return MeshObj(name, pymesh.convex_hull(meshObj.mesh()))
 
 
 def transformMesh(mesh, fn):
@@ -129,14 +138,14 @@ handleBoxRotationMatrix = Rotation.from_euler('z', 5, degrees=True).as_matrix()
 
 handle = pymesh.generate_box_mesh([-70, -20, -50], [-25, 50, 50])
 
-handle = MeshObj(transformMesh(
+handle = MeshObj('handle', transformMesh(
     handle, lambda v: handleBoxRotationMatrix.dot(v)))
 
 # Lip - a box containing the lip of the cup
 
 print('Calculating lip')
 
-lip = MeshObj(pymesh.generate_box_mesh([-70, 35, -70], [70, 50, 70]))
+lip = MeshObj('lip', pymesh.generate_box_mesh([-70, 35, -70], [70, 50, 70]))
 
 # Cup
 
@@ -146,7 +155,7 @@ cupRotationMatrix = Rotation.from_euler('y', 180, degrees=True).as_matrix()
 
 cupMesh = transformMesh(cupMesh, lambda v: cupRotationMatrix.dot(v))
 
-cup = MeshObj(cupMesh)
+cup = MeshObj('cup', cupMesh)
 
 cupWithoutHandle = (cup - handle).mesh()
 
@@ -171,13 +180,17 @@ skullCenterX = (skullMesh.bbox[0][0] + skullMesh.bbox[1][0]) / 2
 xAdjustment = cupCenterX - skullCenterX
 yAdjustment = cupMesh.bbox[0][1] - skullMesh.bbox[0][1]
 
-skull = MeshObj(transformMesh(skullMesh, lambda v: v +
+skull = MeshObj('skull', transformMesh(skullMesh, lambda v: v +
                 [xAdjustment, yAdjustment, 20]))
 
 # Skullcup
 
 print('Combining to create skullcup')
 
-skullcup = skull - convex_hull(cup - handle - lip) + cup
+skullcup = skull - (convex_hull(cup - handle - lip) - cup) + cup
 
-pymesh.save_mesh('/working/skullcup.stl', skullcup.mesh())
+# print('Fixing skullcup')
+
+# skullcup = fix_mesh(skullcup.mesh())
+
+pymesh.save_mesh('/working/skullcup.stl', skullcup)
