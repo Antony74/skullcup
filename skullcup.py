@@ -20,10 +20,10 @@ class MeshObj(object):
         return self._mesh
 
     def __add__(self, other):
-        return MeshObj(pymesh.boolean(self._mesh, other._mesh, 'union', 'cork'))
+        return MeshObj(pymesh.boolean(self._mesh, other._mesh, 'union'))
 
     def __sub__(self, other):
-        return MeshObj(pymesh.boolean(self._mesh, other._mesh, 'difference', 'cork'))
+        return MeshObj(pymesh.boolean(self._mesh, other._mesh, 'difference'))
 
 
 # Helper functions
@@ -178,7 +178,6 @@ skull = MeshObj(transformMesh(skullMesh, lambda v: v +
 
 print('Combining to create skullcup')
 
-skullcup = skull - convex_hull(cup - handle) + cup
-# skullcup = MeshObj(pymesh.merge_meshes([skull.mesh(), cup.mesh(), lip.mesh()]))
+skullcup = skull - convex_hull(cup - handle - lip) + cup
 
 pymesh.save_mesh('/working/skullcup.stl', skullcup.mesh())
