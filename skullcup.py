@@ -36,7 +36,7 @@ def convex_hull(meshObj):
     name = 'convex_hull' + \
         meshObj.name if meshObj.name[0] == '(' else 'convex_hull(' + \
         meshObj.name + ')'
-    
+
     print(name)
     return MeshObj(name, pymesh.convex_hull(meshObj.mesh()))
 
@@ -186,6 +186,14 @@ skull = MeshObj('skull', transformMesh(skullMesh, lambda v: v +
 print('Combining to create skullcup')
 
 skullcup = skull - lip - (convex_hull(cup - handle - lip) - cup) + cup
+
+print('Scaling skullcup')
+
+# Make it 100 units tall, which is great for interpreting as milimeters (mm)
+scale = 100 / (skullcup.mesh().bbox[1][1] - skullcup.mesh().bbox[0][1])
+
+skullcup = MeshObj('skull', transformMesh(
+    skullcup.mesh(), lambda v: scale * v))
 
 print('Fixing skullcup')
 
