@@ -1,0 +1,1 @@
+This code has been taken from the [PyMesh repository](https://github.com/PyMesh/PyMesh/tree/main) and modified, and thus is available under whatever GPL-compatible PyMesh is ultimated licenced under.

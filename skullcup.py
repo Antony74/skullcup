@@ -4,8 +4,36 @@
 from pathlib import Path
 import pymesh
 from scipy.spatial.transform import Rotation
-from numpy.linalg import norm
+from fix_mesh.fix_mesh import fix_mesh
 
+# Load mesh files
+#
+# Mesh files to be place in same directory as this script
+
+filenameCup = '/working/cup_fixed.stl'
+filenameSkull = '/working/skull_fixed.stl'
+
+print('Loading cup')
+
+if (Path(filenameCup).exists()):
+    cupMesh = pymesh.load_mesh(filenameCup)
+else:
+    # https://cults3d.com/en/3d-model/home/coffee-cup
+    cupMesh = pymesh.load_mesh('/working/Coffee_Cup.A.1.stl')
+    print('Fixing cup')
+    cupMesh = fix_mesh(cupMesh)
+    pymesh.save_mesh(filenameCup, cupMesh)
+
+print('Loading skull')
+
+if (Path(filenameSkull).exists()):
+    skullMesh = pymesh.load_mesh(filenameSkull)
+else:
+    # https://cults3d.com/en/3d-model/various/to-make-or-not-to-make
+    skullMesh = pymesh.load_mesh('/working/Scull_geant_fix02.stl')
+    print('Fixing skull')
+    skullMesh = fix_mesh(skullMesh)
+    pymesh.save_mesh(filenameSkull, skullMesh)
 
 # Helper class
 
@@ -45,81 +73,6 @@ def transformMesh(mesh, fn):
     return pymesh.form_mesh([fn(v) for v in mesh.vertices], mesh.faces)
 
 
-def fix_mesh(mesh, detail="normal"):
-    bbox_min, bbox_max = mesh.bbox
-    diag_len = norm(bbox_max - bbox_min)
-    if detail == "normal":
-        target_len = diag_len * 5e-3
-    elif detail == "high":
-        target_len = diag_len * 2.5e-3
-    elif detail == "low":
-        target_len = diag_len * 1e-2
-    # print("Target resolution: {} mm".format(target_len))
-
-    # count = 0
-    print('remove_duplicated_vertices')
-    mesh, __ = pymesh.remove_duplicated_vertices(mesh)
-    print('remove_degenerated_triangles')
-    mesh, __ = pymesh.remove_degenerated_triangles(mesh, 100)
-    print('split_long_edges')
-    mesh, __ = pymesh.split_long_edges(mesh, target_len)
-    # num_vertices = mesh.num_vertices
-    # while True:
-    #     mesh, __ = pymesh.collapse_short_edges(mesh, 1e-6)
-    #     mesh, __ = pymesh.collapse_short_edges(mesh, target_len,
-    #                                            preserve_feature=True)
-    #     mesh, __ = pymesh.remove_obtuse_triangles(mesh, 150.0, 100)
-    #     if mesh.num_vertices == num_vertices:
-    #         break
-
-    #     num_vertices = mesh.num_vertices
-    #     print("#v: {}".format(num_vertices))
-    #     count += 1
-    #     if count > 10:
-    #         break
-    print('resolve_self_intersection')
-    mesh = pymesh.resolve_self_intersection(mesh)
-    print('remove_duplicated_faces')
-    mesh, __ = pymesh.remove_duplicated_faces(mesh)
-    # mesh = pymesh.compute_outer_hull(mesh)
-    # mesh, __ = pymesh.remove_duplicated_faces(mesh)
-    print('remove_obtuse_triangles')
-    mesh, __ = pymesh.remove_obtuse_triangles(mesh, 179.0, 5)
-    print('remove_isolated_vertices')
-    mesh, __ = pymesh.remove_isolated_vertices(mesh)
-
-    return mesh
-
-
-# Load mesh files
-#
-# Mesh files to be place in same directory as this script
-
-filenameCup = '/working/cup_fixed.stl'
-filenameSkull = '/working/skull_fixed.stl'
-
-print('Loading cup')
-
-if (Path(filenameCup).exists()):
-    cupMesh = pymesh.load_mesh(filenameCup)
-else:
-    # https://cults3d.com/en/3d-model/home/coffee-cup
-    cupMesh = pymesh.load_mesh('/working/Coffee_Cup.A.1.stl')
-    print('Fixing cup')
-    cupMesh = fix_mesh(cupMesh)
-    pymesh.save_mesh(filenameCup, cupMesh)
-
-print('Loading skull')
-
-if (Path(filenameSkull).exists()):
-    skullMesh = pymesh.load_mesh(filenameSkull)
-else:
-    # https://cults3d.com/en/3d-model/various/to-make-or-not-to-make
-    skullMesh = pymesh.load_mesh('/working/Scull_geant_fix02.stl')
-    print('Fixing skull')
-    skullMesh = fix_mesh(skullMesh)
-    pymesh.save_mesh(filenameSkull, skullMesh)
-
 # Handle
 #
 # We use a convex hull to 'fill' the cup and thus exclude the skull from the cup's
@@ -129,7 +82,6 @@ else:
 # We want a box containing the cup's handle, and a tiny sliver of the cup just so we can
 # be certain we're not missing any of the handle.  Any amount of cup that doesn't
 # cut through to the cup's interior will be fine.
-
 print('Calculating handle')
 
 handleBoxRotationMatrix = Rotation.from_euler('z', 5, degrees=True).as_matrix()
