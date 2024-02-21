@@ -4,7 +4,7 @@
 import pymesh
 from scipy.spatial.transform import Rotation
 from fix_mesh.fix_mesh import fix_mesh
-from load_fixed_mesh import load_fixed_mesh
+from helpers import load_fixed_mesh, MeshObj, transformMesh, convex_hull
 
 # Load mesh files
 #
@@ -15,45 +15,8 @@ cupMesh = load_fixed_mesh(
     '/working/Coffee_Cup.A.1.stl', '/working/cup_fixed.stl')
 
 # https://cults3d.com/en/3d-model/various/to-make-or-not-to-make
-skullMesh = load_fixed_mesh('/working/Scull_geant_fix02.stl', '/working/skull_fixed.stl')
-
-
-# Helper class
-
-
-class MeshObj(object):
-
-    def __init__(self, name, mesh):
-        self.name = name
-        self._mesh = mesh
-
-    def mesh(self):
-        return self._mesh
-
-    def __add__(self, other):
-        name = self.name + ' + ' + other.name
-        print(name)
-        return MeshObj('(' + name + ')', pymesh.boolean(self._mesh, other._mesh, 'union'))
-
-    def __sub__(self, other):
-        name = self.name + ' - ' + other.name
-        print(name)
-        return MeshObj('(' + name + ')', pymesh.boolean(self._mesh, other._mesh, 'difference'))
-
-
-# Helper functions
-
-def convex_hull(meshObj):
-    name = 'convex_hull' + \
-        meshObj.name if meshObj.name[0] == '(' else 'convex_hull(' + \
-        meshObj.name + ')'
-
-    print(name)
-    return MeshObj(name, pymesh.convex_hull(meshObj.mesh()))
-
-
-def transformMesh(mesh, fn):
-    return pymesh.form_mesh([fn(v) for v in mesh.vertices], mesh.faces)
+skullMesh = load_fixed_mesh(
+    '/working/Scull_geant_fix02.stl', '/working/skull_fixed.stl')
 
 
 # Handle
