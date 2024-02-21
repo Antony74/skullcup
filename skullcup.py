@@ -1,39 +1,22 @@
 # usage:
 # docker run -it -v .:/working pymesh/pymesh python3 /working/skullcup.py
 
-from pathlib import Path
 import pymesh
 from scipy.spatial.transform import Rotation
 from fix_mesh.fix_mesh import fix_mesh
+from load_fixed_mesh import load_fixed_mesh
 
 # Load mesh files
 #
 # Mesh files to be place in same directory as this script
 
-filenameCup = '/working/cup_fixed.stl'
-filenameSkull = '/working/skull_fixed.stl'
+# https://cults3d.com/en/3d-model/home/coffee-cup
+cupMesh = load_fixed_mesh(
+    '/working/Coffee_Cup.A.1.stl', '/working/cup_fixed.stl')
 
-print('Loading cup')
+# https://cults3d.com/en/3d-model/various/to-make-or-not-to-make
+skullMesh = load_fixed_mesh('/working/Scull_geant_fix02.stl', '/working/skull_fixed.stl')
 
-if (Path(filenameCup).exists()):
-    cupMesh = pymesh.load_mesh(filenameCup)
-else:
-    # https://cults3d.com/en/3d-model/home/coffee-cup
-    cupMesh = pymesh.load_mesh('/working/Coffee_Cup.A.1.stl')
-    print('Fixing cup')
-    cupMesh = fix_mesh(cupMesh)
-    pymesh.save_mesh(filenameCup, cupMesh)
-
-print('Loading skull')
-
-if (Path(filenameSkull).exists()):
-    skullMesh = pymesh.load_mesh(filenameSkull)
-else:
-    # https://cults3d.com/en/3d-model/various/to-make-or-not-to-make
-    skullMesh = pymesh.load_mesh('/working/Scull_geant_fix02.stl')
-    print('Fixing skull')
-    skullMesh = fix_mesh(skullMesh)
-    pymesh.save_mesh(filenameSkull, skullMesh)
 
 # Helper class
 
