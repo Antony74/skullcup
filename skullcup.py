@@ -123,7 +123,7 @@ skullRotationMatrix = Rotation.from_euler(
 skullMesh = transformMesh(skullMesh, lambda v: scale *
                           skullRotationMatrix.dot(v))
 
-# now center the skull horizantally, and have its base aligned with the base of the cup
+# now center the skull horizontally, and have its base aligned with the base of the cup
 
 cupCenterX = (cupWithoutHandle.bbox[0][0] + cupWithoutHandle.bbox[1][0]) / 2
 skullCenterX = (skullMesh.bbox[0][0] + skullMesh.bbox[1][0]) / 2
@@ -141,7 +141,7 @@ skullcup = skull - lip - (convex_hull(cup - handle - lip) - cup) + cup
 
 print('Scaling skullcup')
 
-# Make it 100 units tall, which is great for interpreting as milimeters (mm)
+# Make it 100 units tall, which is great for interpreting as millimeters (mm)
 scale = 100 / (skullcup.mesh().bbox[1][1] - skullcup.mesh().bbox[0][1])
 
 skullcup = MeshObj('skull', transformMesh(
