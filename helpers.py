@@ -16,7 +16,7 @@ def load_fixed_mesh(originalFilename, fixedFilename):
     return mesh
 
 
-class MeshObj(object):
+class MeshObj:
 
     def __init__(self, name, mesh):
         self.name = name
