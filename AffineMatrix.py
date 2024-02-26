@@ -25,7 +25,7 @@ class AffineMatrix:
             return self.m33.dot(operand) + self.translation
 
     def translate(self, x, y, z):
-        matrix = deepcopy(self.matrix)
+        matrix = deepcopy(self.m44)
         matrix[0][3] += x
         matrix[1][3] += y
         matrix[2][3] += z
