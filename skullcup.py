@@ -5,6 +5,7 @@ import pymesh
 from scipy.spatial.transform import Rotation
 from fix_mesh.fix_mesh import fix_mesh
 from helpers import load_fixed_mesh, MeshObj, transformMesh, convex_hull
+from AffineMatrix import AffineMatrix
 
 # Load mesh files
 #
@@ -30,7 +31,7 @@ skullMesh = load_fixed_mesh(
 # cut through to the cup's interior will be fine.
 print('Calculating handle')
 
-handleBoxRotationMatrix = Rotation.from_euler('z', 5, degrees=True).as_matrix()
+handleBoxRotationMatrix = AffineMatrix().rotateZ(5, degrees=True)
 
 handle = pymesh.generate_box_mesh([-70, -20, -50], [-25, 50, 50])
 
