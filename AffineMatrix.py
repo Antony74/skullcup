@@ -34,7 +34,7 @@ class AffineMatrix:
     def rotate(self, seq, angles, degrees=False):
         rotationMatrix = np.identity(4)
         rotationMatrix[:3, :3] = Rotation.from_euler(seq, angles, degrees).as_matrix()
-        return AffineMatrix(self.m44 * rotationMatrix)
+        return AffineMatrix(rotationMatrix.dot(self.m44))
 
     def rotateX(self, angle, degrees=False):
         return self.rotate('x', angle, degrees)
@@ -50,7 +50,7 @@ class AffineMatrix:
             y = x
             z = x
 
-        return AffineMatrix(self.m44 * [[x, 0, 0, 0], [0, y, 0, 0], [0, 0, z, 0], [0, 0, 0, 1]])
+        return AffineMatrix(self.m44.dot([[x, 0, 0, 0], [0, y, 0, 0], [0, 0, z, 0], [0, 0, 0, 1]]))
 
     def scaleX(self, x):
         return self.scale(x, 1, 1)

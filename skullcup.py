@@ -1,10 +1,14 @@
 # usage:
 # docker run -it -v .:/working pymesh/pymesh python3 /working/skullcup.py
 
+import time
+from datetime import timedelta
 import pymesh
 from fix_mesh.fix_mesh import fix_mesh
 from helpers import load_fixed_mesh, MeshObj, convex_hull
 from AffineMatrix import AffineMatrix
+
+start_time = time.monotonic()
 
 # Load mesh files
 #
@@ -92,3 +96,6 @@ print('Saving skullcup')
 pymesh.save_mesh('/working/skullcup.stl', skullcup)
 
 print('Done')
+
+end_time = time.monotonic()
+print(timedelta(seconds=end_time - start_time))
