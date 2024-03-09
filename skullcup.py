@@ -1,5 +1,5 @@
 # usage:
-# docker run -it -v .:/working pymesh/pymesh python3 /working/skullcup.py
+# docker run -it -v .:/skullcup pymesh/pymesh python3 /skullcup/skullcup.py
 
 import time
 from datetime import timedelta
@@ -16,12 +16,13 @@ start_time = time.monotonic()
 
 # https://cults3d.com/en/3d-model/home/coffee-cup
 cupMesh = load_fixed_mesh(
-    '/working/Coffee_Cup.A.1.stl', '/working/cup_fixed.stl')
+    '/skullcup/Coffee_Cup.A.1.stl', '/skullcup/cup_fixed.stl')
 
 # https://cults3d.com/en/3d-model/various/to-make-or-not-to-make
 skullMesh = load_fixed_mesh(
-    '/working/Scull_geant_fix02.stl', '/working/skull_fixed.stl')
+    '/skullcup/Scull_geant_fix02.stl', '/skullcup/skull_fixed.stl')
 
+exit(0)
 
 # Handle
 #
@@ -72,7 +73,8 @@ skullCenterX = (skullMesh.bbox[0][0] + skullMesh.bbox[1][0]) / 2
 xAdjustment = cupCenterX - skullCenterX
 yAdjustment = cupMesh.bbox[0][1] - skullMesh.bbox[0][1]
 
-skull = MeshObj('skull', AffineMatrix().translate(xAdjustment, yAdjustment, 20).dot(skullMesh))
+skull = MeshObj('skull', AffineMatrix().translate(
+    xAdjustment, yAdjustment, 20).dot(skullMesh))
 
 # Skullcup
 
@@ -93,7 +95,7 @@ skullcup = fix_mesh(skullcup.mesh())
 
 print('Saving skullcup')
 
-pymesh.save_mesh('/working/skullcup.stl', skullcup)
+pymesh.save_mesh('/skullcup/skullcup.stl', skullcup)
 
 print('Done')
 
