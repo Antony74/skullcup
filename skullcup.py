@@ -5,8 +5,9 @@ import time
 from datetime import timedelta
 import pymesh
 from fix_mesh.fix_mesh import fix_mesh
-from helpers import load_fixed_mesh, MeshObj, convex_hull
+from helpers import load_fixed_mesh, convex_hull
 from AffineMatrix import AffineMatrix
+from MeshObj import MeshObj
 
 start_time = time.monotonic()
 
