@@ -27,18 +27,26 @@ class MeshObj:
         self.name = name
         self._mesh = mesh
 
+    @staticmethod
+    def create(name, mesh):
+        return MeshObj(name, mesh)
+
     def mesh(self):
         return self._mesh
 
     def __add__(self, other):
         name = self.name + ' + ' + other.name
         print(name)
-        return MeshObj('(' + name + ')', pymesh.boolean(self._mesh, other._mesh, 'union'))
+        result = self.create('(' + name + ')', pymesh.boolean(self._mesh, other._mesh, 'union'))
+        pymesh.save_mesh('/skullcup/working/' + name + '.stl', result.mesh())
+        return result
 
     def __sub__(self, other):
         name = self.name + ' - ' + other.name
         print(name)
-        return MeshObj('(' + name + ')', pymesh.boolean(self._mesh, other._mesh, 'difference'))
+        result = self.create('(' + name + ')', pymesh.boolean(self._mesh, other._mesh, 'difference'))
+        pymesh.save_mesh('/skullcup/working/' + name + '.stl', result.mesh())
+        return result
 
 
 def convex_hull(meshObj):
@@ -47,7 +55,7 @@ def convex_hull(meshObj):
         meshObj.name + ')'
 
     print(name)
-    return MeshObj(name, pymesh.convex_hull(meshObj.mesh()))
+    return meshObj.create(name, pymesh.convex_hull(meshObj.mesh()))
 
 
 def mesh_info(mesh):
@@ -56,6 +64,8 @@ def mesh_info(mesh):
 
 
 def biggest_piece(mesh):
+    print('biggest_piece')
+
     def reducer(acc, piece): return acc if len(
         acc.faces) > len(piece.faces) else piece
 
@@ -63,4 +73,7 @@ def biggest_piece(mesh):
 
     sep = pymesh.separate_mesh(mesh)
 
-    return reduce(reducer, sep, emptyMesh)
+    result = reduce(reducer, sep, emptyMesh)
+    mesh_info(result)
+
+    return result

@@ -16,13 +16,11 @@ start_time = time.monotonic()
 
 # https://cults3d.com/en/3d-model/home/coffee-cup
 cupMesh = load_fixed_mesh(
-    '/skullcup/Coffee_Cup.A.1.stl', '/skullcup/cup_fixed.stl')
+    '/skullcup/Coffee_Cup.A.1.stl', '/skullcup/working/cup_fixed.stl')  
 
 # https://cults3d.com/en/3d-model/various/to-make-or-not-to-make
 skullMesh = load_fixed_mesh(
-    '/skullcup/Scull_geant_fix02.stl', '/skullcup/skull_fixed.stl')
-
-exit(0)
+    '/skullcup/Scull_geant_fix02.stl', '/skullcup/working/skull_fixed.stl')
 
 # Handle
 #
