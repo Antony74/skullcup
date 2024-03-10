@@ -7,7 +7,7 @@ import pymesh
 from fix_mesh.fix_mesh import fix_mesh
 from helpers import load_fixed_mesh, convex_hull
 from AffineMatrix import AffineMatrix
-from MeshObj import MeshObj
+from SinglePieceMeshObj import SinglePieceMeshObj
 
 start_time = time.monotonic()
 
@@ -36,13 +36,13 @@ print('Calculating handle')
 
 handle = pymesh.generate_box_mesh([-70, -20, -50], [-25, 50, 50])
 
-handle = MeshObj('handle', AffineMatrix().rotateZ(5, degrees=True).dot(handle))
+handle = SinglePieceMeshObj('handle', AffineMatrix().rotateZ(5, degrees=True).dot(handle))
 
 # Lip - a box containing the lip of the cup
 
 print('Calculating lip')
 
-lip = MeshObj('lip', pymesh.generate_box_mesh([-70, 35, -70], [70, 50, 70]))
+lip = SinglePieceMeshObj('lip', pymesh.generate_box_mesh([-70, 35, -70], [70, 50, 70]))
 
 # Cup
 
@@ -50,7 +50,7 @@ print('Orientating cup')
 
 cupMesh = AffineMatrix().rotateY(180, degrees=True).dot(cupMesh)
 
-cup = MeshObj('cup', cupMesh)
+cup = SinglePieceMeshObj('cup', cupMesh)
 
 cupWithoutHandle = (cup - handle).mesh()
 
@@ -72,7 +72,7 @@ skullCenterX = (skullMesh.bbox[0][0] + skullMesh.bbox[1][0]) / 2
 xAdjustment = cupCenterX - skullCenterX
 yAdjustment = cupMesh.bbox[0][1] - skullMesh.bbox[0][1]
 
-skull = MeshObj('skull', AffineMatrix().translate(
+skull = SinglePieceMeshObj('skull', AffineMatrix().translate(
     xAdjustment, yAdjustment, 20).dot(skullMesh))
 
 # Skullcup
@@ -86,7 +86,7 @@ print('Scaling skullcup')
 # Make it 100 units tall, which is great for interpreting as millimeters (mm)
 scale = 100 / (skullcup.mesh().bbox[1][1] - skullcup.mesh().bbox[0][1])
 
-skullcup = MeshObj('skull', AffineMatrix().scale(scale).dot(skullcup.mesh()))
+skullcup = SinglePieceMeshObj('skull', AffineMatrix().scale(scale).dot(skullcup.mesh()))
 
 print('Fixing skullcup')
 

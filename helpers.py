@@ -28,6 +28,7 @@ def convex_hull(meshObj):
 
     print(name)
     result = meshObj.create(name, pymesh.convex_hull(meshObj.mesh()))
+    mesh_info(result.mesh())
     pymesh.save_mesh('/skullcup/working/' + name + '.stl', result.mesh())
     return result
 
