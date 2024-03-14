@@ -1,5 +1,5 @@
-from pathlib import Path
-from functools import reduce
+import time
+from datetime import timedelta
 import pymesh
 from fix_mesh.fix_mesh import fix_mesh
 
@@ -30,7 +30,13 @@ def mesh_info(mesh):
           ', faces ' + str(len(mesh.faces)))
 
 
+start_time = time.monotonic()
+
+
 def save_mesh_verbose(filename, mesh):
     print('Saving ' + filename)
     mesh_info(mesh)
     pymesh.save_mesh(filename, mesh)
+    end_time = time.monotonic()
+    print(timedelta(seconds=end_time - start_time))
+
