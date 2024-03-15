@@ -3,7 +3,7 @@
 
 import pymesh
 from scipy.spatial.transform import Rotation
-from helpers import load_fixed_mesh, MeshObj, transformMesh
+from common.helpers import load_fixed_mesh, MeshObj, transformMesh
 
 
 # https://cults3d.com/en/3d-model/home/coffee-cup

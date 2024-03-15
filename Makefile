@@ -1,34 +1,34 @@
 all: working/skullWithCup.stl
 
-working/handle.stl: handle.py
-	python3 handle.py
+working/handle.stl: src/handle.py src/common/AffineMatrix.py src/common/helpers.py
+	python3 src/handle.py
 
-working/lip.stl: lip.py
-	python3 lip.py
+working/lip.stl: src/lip.py
+	python3 src/lip.py
 
-working/cup.stl: cup.py Coffee_Cup.A.1.stl
-	python3 cup.py
+working/cup.stl: src/cup.py Coffee_Cup.A.1.stl src/common/AffineMatrix.py src/common/helpers.py
+	python3 src/cup.py
 
-working/cupWithoutHandle.stl: working/cup.stl working/handle.stl sub.py
-	python3 sub.py working/cupWithoutHandle.stl working/cup.stl working/handle.stl
+working/cupWithoutHandle.stl: working/cup.stl working/handle.stl src/difference.py src/common/MeshObj.py
+	python3 src/difference.py working/cupWithoutHandle.stl working/cup.stl working/handle.stl
 
-working/skull.stl: skull.py Scull_geant_fix02.stl working/cupWithoutHandle.stl
-	python3 skull.py
+working/skull.stl: src/skull.py Scull_geant_fix02.stl working/cupWithoutHandle.stl src/common/AffineMatrix.py src/common/helpers.py
+	python3 src/skull.py
 
-working/cupWithoutHandleOrLip.stl: working/cupWithoutHandle.stl working/lip.stl sub.py
-	python3 sub.py working/cupWithoutHandleOrLip.stl working/cupWithoutHandle.stl working/lip.stl
+working/cupWithoutHandleOrLip.stl: working/cupWithoutHandle.stl working/lip.stl src/difference.py
+	python3 src/difference.py working/cupWithoutHandleOrLip.stl working/cupWithoutHandle.stl working/lip.stl
 
-working/convexHull.stl: working/cupWithoutHandleOrLip.stl convexHull.py
-	python3 convexHull.py working/convexHull.stl working/cupWithoutHandleOrLip.stl
+working/convexHull.stl: working/cupWithoutHandleOrLip.stl src/convexHull.py
+	python3 src/convexHull.py working/convexHull.stl working/cupWithoutHandleOrLip.stl
 
-working/skullWithoutLip.stl: working/skull.stl working/lip.stl sub.py
-	python3 sub.py working/skullWithoutLip.stl working/skull.stl working/lip.stl
+working/skullWithoutLip.stl: working/skull.stl working/lip.stl src/difference.py
+	python3 src/difference.py working/skullWithoutLip.stl working/skull.stl working/lip.stl
 
-working/skullWithoutCup.stl: working/skullWithoutLip.stl working/convexHull.stl sub.py
-	python3 sub.py working/skullWithoutCup.stl working/skullWithoutLip.stl working/convexHull.stl
+working/skullWithoutCup.stl: working/skullWithoutLip.stl working/convexHull.stl src/difference.py
+	python3 src/difference.py working/skullWithoutCup.stl working/skullWithoutLip.stl working/convexHull.stl
 
-working/skullWithCup.stl: working/skullWithoutCup.stl working/cup.stl add.py
-	python3 add.py working/skullWithCup.stl working/skullWithoutCup.stl working/cup.stl
+working/skullWithCup.stl: working/skullWithoutCup.stl working/cup.stl src/union.py
+	python3 src/union.py working/skullWithCup.stl working/skullWithoutCup.stl working/cup.stl
 
 clean:
 	rm -rf working/*.stl
