@@ -9,7 +9,7 @@ class AffineMatrix:
     def __init__(self, matrix44=np.identity(4)):
         self.m44 = deepcopy(matrix44)
         self.m33 = matrix44[:3, :3]
-        self.translation = matrix44[3, :3]
+        self.translation = matrix44[:3, 3]
 
     def print(self):
         print(self.m44)
@@ -33,7 +33,8 @@ class AffineMatrix:
 
     def rotate(self, seq, angles, degrees=False):
         rotationMatrix = np.identity(4)
-        rotationMatrix[:3, :3] = Rotation.from_euler(seq, angles, degrees).as_matrix()
+        rotationMatrix[:3, :3] = Rotation.from_euler(
+            seq, angles, degrees).as_matrix()
         return AffineMatrix(rotationMatrix.dot(self.m44))
 
     def rotateX(self, angle, degrees=False):

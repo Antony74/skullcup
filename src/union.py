@@ -7,7 +7,7 @@ if (len(sys.argv) != 4):
     exit(1)
 
 print(sys.argv[1].split('/').pop() + ' = ' +
-      sys.argv[2].split('/').pop() + ' - ' + sys.argv[3].split('/').pop())
+      sys.argv[2].split('/').pop() + ' + ' + sys.argv[3].split('/').pop())
 
 in1 = pymesh.load_mesh(sys.argv[2])
 in2 = pymesh.load_mesh(sys.argv[3])
