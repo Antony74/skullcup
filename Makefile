@@ -9,7 +9,7 @@ working/lip.stl: src/lip.py
 working/cup.stl: src/cup.py Coffee_Cup.A.1.stl src/common/AffineMatrix.py src/common/helpers.py
 	python3 src/cup.py
 
-working/cupWithoutHandle.stl: working/cup.stl working/handle.stl src/difference.py src/common/MeshObj.py
+working/cupWithoutHandle.stl: working/cup.stl working/handle.stl src/difference.py
 	python3 src/difference.py working/cupWithoutHandle.stl working/cup.stl working/handle.stl
 
 working/skull.stl: src/skull.py Scull_geant_fix02.stl working/cupWithoutHandle.stl src/common/AffineMatrix.py src/common/helpers.py
