@@ -1,4 +1,4 @@
-all: skullcup.stl
+all: skullcup.stl working/m.stl
 
 clean:
 	rm -rf working/*.stl
@@ -42,3 +42,8 @@ skullcup.stl: working/skullWithCup.stl src/skullcup.py
 
 # M cup (WIP)
 
+working/nib.stl: src/nib.py
+	python3 src/nib.py
+
+working/m.stl: working/cup.stl working/nib.stl src/m.py
+	python3 src/m.py
