@@ -45,5 +45,8 @@ skullcup.stl: working/skullWithCup.stl src/skullcup.py
 working/nib.stl: src/nib.py
 	python3 src/nib.py
 
-working/m.stl: working/cup.stl working/nib.stl src/m.py
+working/cupCenteredIgnoringHandle.stl: working/cup.stl working/cupWithoutHandle.stl src/cupCenteredIgnoringHandle.py
+	python3 src/cupCenteredIgnoringHandle.py
+
+working/m.stl: working/cupCenteredIgnoringHandle.stl working/nib.stl src/m.py
 	python3 src/m.py
