@@ -18,17 +18,17 @@ def segmentedMap(value, range1, range2, maps):
         raise Exception('segmentedMap range arrays not equal')
 
     n = range1.findIndex(lambda t: t > value)
-    match n:
-        case 0:
-            return range2[0]
-        case -1:
-            return range2[range2.length - 1]
-        case _:
-            currentMap = maps and maps[n - 1] if maps[n - 1] else map
-            return currentMap(
-                value,
-                range1[n - 1],
-                range1[n],
-                range2[n - 1],
-                range2[n],
-            )
+
+    if n == 0:
+        return range2[0]
+    elif n == -1:
+        return range2[range2.length - 1]
+    else:
+        currentMap = maps and maps[n - 1] if maps[n - 1] else map
+        return currentMap(
+            value,
+            range1[n - 1],
+            range1[n],
+            range2[n - 1],
+            range2[n],
+        )

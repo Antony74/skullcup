@@ -48,5 +48,8 @@ working/nib.stl: src/nib.py
 working/cupCenteredIgnoringHandle.stl: working/cup.stl working/cupWithoutHandle.stl src/cupCenteredIgnoringHandle.py
 	python3 src/cupCenteredIgnoringHandle.py
 
-working/m.stl: working/cupCenteredIgnoringHandle.stl working/nib.stl src/m.py
+working/profile.json: working/cupCenteredIgnoringHandle.stl src/getProfile.py
+	python3 src/getProfile.py
+
+working/m.stl: working/cupCenteredIgnoringHandle.stl working/nib.stl working/profile.json src/m.py
 	python3 src/m.py
