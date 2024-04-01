@@ -15,29 +15,41 @@ with open('working/profile.json') as f:
 bands = profile['bands']
 yMin = profile['yMin']
 yMax = profile['yMax']
+profile = profile['profile']
 
 getBand, fromBand = createBandedMap(bands, yMin, yMax)
 
 
 def cupMap(theta, y):
-    radius = getBand(y)
+    band = getBand(y)
+    radius = profile[band]
     return [radius * math.cos(theta), y, radius * math.sin(theta)]
 
 
 yMid = 0.5 * (yMin + yMax)
 
-x, y, z = cupMap(0, yMid)
-nib1 = AffineMatrix().translate(x, y, z).dot(nib)
+meshes = [cup]
 
-x, y, z = cupMap(0.5 * math.pi, yMid)
-nib2 = AffineMatrix().translate(x, y, z).dot(nib)
+for n in range(10):
 
-x, y, z = cupMap(math.pi, yMid)
-nib3 = AffineMatrix().translate(x, y, z).dot(nib)
+    yy = linearMap(n, 0, 10, yMin, yMax)
 
-x, y, z = cupMap(1.5 * math.pi, yMid)
-nib4 = AffineMatrix().translate(x, y, z).dot(nib)
+    x, y, z = cupMap(0, yy)
+    newNib = AffineMatrix().translate(x, y, z).dot(nib)
+    meshes.append(newNib)
 
-out = pymesh.merge_meshes([cup, nib1, nib2, nib3, nib4])
+    x, y, z = cupMap(0.5 * math.pi, yy)
+    newNib = AffineMatrix().translate(x, y, z).dot(nib)
+    meshes.append(newNib)
+
+    x, y, z = cupMap(math.pi, yy)
+    newNib = AffineMatrix().translate(x, y, z).dot(nib)
+    meshes.append(newNib)
+
+    x, y, z = cupMap(1.5 * math.pi, yy)
+    newNib = AffineMatrix().translate(x, y, z).dot(nib)
+    meshes.append(newNib)
+
+out = pymesh.merge_meshes(meshes)
 
 save_mesh_verbose('working/m.stl', out)
