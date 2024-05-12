@@ -12,7 +12,7 @@ yMax = cup.bbox[1][1]
 
 profile = [-sys.maxsize] * (bands + 1)
 
-getBand, fromBand = createBandedMap(bands, yMin, yMax)
+getBand = createBandedMap(bands, yMin, yMax)
 
 for [x, y, z] in cup.vertices:
     band = getBand(y)

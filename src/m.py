@@ -19,7 +19,7 @@ yMin = profile['yMin']
 yMax = profile['yMax']
 profile = profile['profile']
 
-getBand, fromBand = createBandedMap(bands, yMin, yMax)
+getBand = createBandedMap(bands, yMin, yMax)
 
 patchMin = linearMap(0.25, 0, 1, yMin, yMax)
 patchMax = linearMap(0.75, 0, 1, yMin, yMax)
@@ -30,10 +30,9 @@ def cupMap(theta, y):
     radius = profile[band] + radiusAdjust
     return AffineMatrix().translate(radius * math.cos(0), y, radius * math.sin(0)).rotateY(theta)
 
+
 # 'patch' refers to the patch of the cup where we want the design,
 # and the patchMap function maps to it from the unit square.
-
-
 def patchMap(x, y):
     return cupMap(linearMap(x, 0, 1, -0.25 * math.pi, 0.25 * math.pi), linearMap(y, 0, 1, patchMin, patchMax))
 
