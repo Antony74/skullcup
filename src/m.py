@@ -21,8 +21,12 @@ profile = profile['profile']
 
 getBand = createBandedMap(bands, yMin, yMax)
 
-patchMin = linearMap(0.25, 0, 1, yMin, yMax)
-patchMax = linearMap(0.75, 0, 1, yMin, yMax)
+patchRadius = 0.15
+patchXMid = -0.5
+patchXMin = patchXMid - patchRadius
+patchXMax = patchXMid + patchRadius
+patchYMin = linearMap(0.3, 0, 1, yMin, yMax)
+patchYMax = linearMap(0.8, 0, 1, yMin, yMax)
 
 
 def cupMap(theta, y):
@@ -34,10 +38,10 @@ def cupMap(theta, y):
 # 'patch' refers to the patch of the cup where we want the design,
 # and the patchMap function maps to it from the unit square.
 def patchMap(x, y):
-    return cupMap(linearMap(x, 0, 1, -0.25 * math.pi, 0.25 * math.pi), linearMap(y, 0, 1, patchMin, patchMax))
+    return cupMap(linearMap(x, 0, 1, patchXMin * math.pi, patchXMax * math.pi), linearMap(y, 0, 1, patchYMin, patchYMax))
 
 
-meshes = [cup]
+meshes = []
 
 steps = 40
 
@@ -46,13 +50,16 @@ for step in range(0, steps + 1):
     position = segmentedMap(
         step,
         [0, 1, 2, 3, 4],
-        [[0, 0], [0, 1], [0.5, 0], [1, 1], [1, 0]],
+        [[0, 0], [0, 1], [0.5, 0.25], [1, 1], [1, 0]],
         [linearMap2D] * 5,
     )
 
     newNib = patchMap(position[0], position[1]).dot(nib)
     meshes.append(newNib)
 
-out = pymesh.merge_meshes(meshes)
+patch = pymesh.merge_meshes(meshes)
+backPatch = AffineMatrix().rotateY(math.pi).dot(patch)
+
+out = pymesh.merge_meshes([cup, patch, backPatch])
 
 save_mesh_verbose('working/m.stl', out)
