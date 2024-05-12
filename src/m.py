@@ -4,7 +4,7 @@ import pymesh
 from common.AffineMatrix import AffineMatrix
 from common.bandedMap import createBandedMap
 from common.helpers import save_mesh_verbose
-from common.linearMap import linearMap
+from common.linearMap import linearMap, linearMap2D, segmentedMap
 
 radiusAdjust = 2
 
@@ -21,35 +21,37 @@ profile = profile['profile']
 
 getBand, fromBand = createBandedMap(bands, yMin, yMax)
 
+patchMin = linearMap(0.25, 0, 1, yMin, yMax)
+patchMax = linearMap(0.75, 0, 1, yMin, yMax)
+
 
 def cupMap(theta, y):
     band = getBand(y)
     radius = profile[band] + radiusAdjust
-    return [radius * math.cos(theta), y, radius * math.sin(theta)]
+    return AffineMatrix().translate(radius * math.cos(0), y, radius * math.sin(0)).rotateY(theta)
+
+# 'patch' refers to the patch of the cup where we want the design,
+# and the patchMap function maps to it from the unit square.
 
 
-yMid = 0.5 * (yMin + yMax)
+def patchMap(x, y):
+    return cupMap(linearMap(x, 0, 1, -0.25 * math.pi, 0.25 * math.pi), linearMap(y, 0, 1, patchMin, patchMax))
+
 
 meshes = [cup]
 
-for n in range(10):
+steps = 40
 
-    yy = linearMap(n, 0, 10, yMin, yMax)
+for step in range(0, steps + 1):
+    step = linearMap(step, 0, steps, 0, 4)
+    position = segmentedMap(
+        step,
+        [0, 1, 2, 3, 4],
+        [[0, 0], [0, 1], [0.5, 0], [1, 1], [1, 0]],
+        [linearMap2D] * 5,
+    )
 
-    x, y, z = cupMap(0, yy)
-    newNib = AffineMatrix().translate(x, y, z).dot(nib)
-    meshes.append(newNib)
-
-    x, y, z = cupMap(0.5 * math.pi, yy)
-    newNib = AffineMatrix().translate(x, y, z).dot(nib)
-    meshes.append(newNib)
-
-    x, y, z = cupMap(math.pi, yy)
-    newNib = AffineMatrix().translate(x, y, z).dot(nib)
-    meshes.append(newNib)
-
-    x, y, z = cupMap(1.5 * math.pi, yy)
-    newNib = AffineMatrix().translate(x, y, z).dot(nib)
+    newNib = patchMap(position[0], position[1]).dot(nib)
     meshes.append(newNib)
 
 out = pymesh.merge_meshes(meshes)
