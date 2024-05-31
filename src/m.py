@@ -43,12 +43,14 @@ def patchMap(pt):
     y = pt[1]
     return cupMap(linearMap(x, 0, 1, patchXMin * math.pi, patchXMax * math.pi), linearMap(y, 0, 1, patchYMin, patchYMax))
 
+
 def cartesianToSpherical(x, y, z):
     XsqPlusYsq = x**2 + y**2
-    r = math.sqrt(XsqPlusYsq + z**2)                 # r
-    elevation = math.atan2(z, math.sqrt(XsqPlusYsq)) # theta
-    azimuth = math.atan2(y, x)                       # phi
+    r = math.sqrt(XsqPlusYsq + z**2)                  # r
+    elevation = math.atan2(z, math.sqrt(XsqPlusYsq))  # theta
+    azimuth = math.atan2(y, x)                        # phi
     return r, elevation, azimuth
+
 
 meshes = []
 
@@ -60,7 +62,10 @@ for index in range(0, len(points) - 1):
     end = points[index + 1]
     vector = start - end
 
-    r, elevation, azimuth = cartesianToSpherical(vector[0], vector[1], vector[2])
+    r, elevation, azimuth = cartesianToSpherical(
+        vector[0],
+        vector[1],
+        vector[2])
 
     meshes.append(AffineMatrix()
                   .scale(r, prismThickness, prismThickness)
