@@ -47,7 +47,7 @@ def patchMap(pt):
 def cartesianToSpherical(x, y, z):
     XsqPlusYsq = x**2 + y**2
     r = math.sqrt(XsqPlusYsq + z**2)                  # r
-    elevation = math.atan2(z, math.sqrt(XsqPlusYsq))  # theta
+    elevation = math.acos(z / r)                      # theta
     azimuth = math.atan2(y, x)                        # phi
     return r, elevation, azimuth
 
@@ -56,6 +56,8 @@ meshes = []
 
 points = list(map(lambda pt: patchMap(pt).dot([1, 0, 0]),
                   [[0, 0], [0, 1], [0.5, 0.5], [1, 1], [1, 0]]))
+
+elevationCorrection = [1, -1, 1, -1]
 
 for index in range(0, len(points) - 1):
     start = points[index]
@@ -67,10 +69,13 @@ for index in range(0, len(points) - 1):
         vector[1],
         vector[2])
 
+    elevation -= 0.5 * math.pi
+
     meshes.append(AffineMatrix()
                   .scale(r, prismThickness, prismThickness)
+                  .rotateX(0.5 * math.pi)
                   .rotateZ(azimuth + math.pi)
-                  .rotateX(-elevation)
+                  .rotateX(elevation * elevationCorrection[index])
                   .translate(start[0], start[1], start[2])
                   .dot(unitPrism))
 
