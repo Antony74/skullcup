@@ -42,8 +42,8 @@ skullcup.stl: working/skullWithCup.stl src/skullcup.py
 
 # M cup (WIP)
 
-working/nib.stl: src/nib.py
-	python3 src/nib.py
+working/prism.stl: src/prism.py
+	python3 src/prism.py
 
 working/cupCenteredIgnoringHandle.stl: working/cup.stl working/cupWithoutHandle.stl src/cupCenteredIgnoringHandle.py
 	python3 src/cupCenteredIgnoringHandle.py
@@ -51,5 +51,5 @@ working/cupCenteredIgnoringHandle.stl: working/cup.stl working/cupWithoutHandle.
 working/profile.json: working/cupCenteredIgnoringHandle.stl src/getProfile.py src/common/bandedMap.py src/common/linearMap.py
 	python3 src/getProfile.py
 
-working/m.stl: working/cupCenteredIgnoringHandle.stl working/nib.stl working/profile.json src/m.py
+working/m.stl: working/cupCenteredIgnoringHandle.stl working/prism.stl working/profile.json src/m.py
 	python3 src/m.py

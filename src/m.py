@@ -4,12 +4,12 @@ import pymesh
 from common.AffineMatrix import AffineMatrix
 from common.bandedMap import createBandedMap
 from common.helpers import save_mesh_verbose
-from common.linearMap import linearMap, linearMap2D, segmentedMap
+from common.linearMap import linearMap
 
-radiusAdjust = 2
+radiusAdjust = -0.5
 
 cup = pymesh.load_mesh('working/cupCenteredIgnoringHandle.stl')
-nib = pymesh.load_mesh('working/nib.stl')
+unitPrism = pymesh.load_mesh('working/prism.stl')
 
 with open('working/profile.json') as f:
     profile = json.load(f)
@@ -37,25 +37,23 @@ def cupMap(theta, y):
 
 # 'patch' refers to the patch of the cup where we want the design,
 # and the patchMap function maps to it from the unit square.
-def patchMap(x, y):
+def patchMap(pt):
+    x = pt[0]
+    y = pt[1]
     return cupMap(linearMap(x, 0, 1, patchXMin * math.pi, patchXMax * math.pi), linearMap(y, 0, 1, patchYMin, patchYMax))
 
 
 meshes = []
 
-steps = 40
+points = list(map(lambda pt: patchMap(pt).dot([1, 0, 0]),
+                  [[0, 0], [0, 1], [0.5, 0.5], [1, 1], [1, 0]]))
 
-for step in range(0, steps + 1):
-    step = linearMap(step, 0, steps, 0, 4)
-    position = segmentedMap(
-        step,
-        [0, 1, 2, 3, 4],
-        [[0, 0], [0, 1], [0.5, 0.25], [1, 1], [1, 0]],
-        [linearMap2D] * 5,
-    )
-
-    newNib = patchMap(position[0], position[1]).dot(nib)
-    meshes.append(newNib)
+for index in range(0, len(points)):
+    point = points[index]
+    x = point[0]
+    y = point[1]
+    z = point[2]
+    meshes.append(AffineMatrix().translate(x, y, z).dot(unitPrism))
 
 patch = pymesh.merge_meshes(meshes)
 backPatch = AffineMatrix().rotateY(math.pi).dot(patch)
