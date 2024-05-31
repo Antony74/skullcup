@@ -6,8 +6,9 @@ from common.bandedMap import createBandedMap
 from common.helpers import save_mesh_verbose
 from common.linearMap import linearMap
 
-radiusAdjust = 5
-prismThickness = 5
+radiusAdjust = -2
+prismThickness = 7
+prismHeight = 25
 
 cup = pymesh.load_mesh('working/cupCenteredIgnoringHandle.stl')
 unitPrism = pymesh.load_mesh('working/prism.stl')
@@ -57,6 +58,7 @@ meshes = []
 points = list(map(lambda pt: patchMap(pt).dot([1, 0, 0]),
                   [[0, 0], [0, 1], [0.5, 0.5], [1, 1], [1, 0]]))
 
+cupCorrection = [0.35, 0.5, 0.5, 0.35]
 elevationCorrection = [1, -1, 1, -1]
 
 for index in range(0, len(points) - 1):
@@ -72,8 +74,8 @@ for index in range(0, len(points) - 1):
     elevation -= 0.5 * math.pi
 
     meshes.append(AffineMatrix()
-                  .scale(r, prismThickness, prismThickness)
-                  .rotateX(0.5 * math.pi)
+                  .scale(r, prismHeight, prismThickness)
+                  .rotateX(cupCorrection[index] * math.pi)
                   .rotateZ(azimuth + math.pi)
                   .rotateX(elevation * elevationCorrection[index])
                   .translate(start[0], start[1], start[2])
