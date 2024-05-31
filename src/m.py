@@ -11,7 +11,6 @@ radiusAdjust = -2
 prismThickness = 7
 prismHeight = 25
 
-cup = pymesh.load_mesh('working/cupCenteredIgnoringHandle.stl')
 unitPrism = pymesh.load_mesh('working/prism.stl')
 
 with open('working/profile.json') as f:
@@ -71,9 +70,17 @@ for index in range(0, len(points) - 1):
                   .translate(start[0], start[1], start[2])
                   .dot(unitPrism))
 
-patch = pymesh.merge_meshes(meshes)
+patch = None
+
+for index in range(len(meshes)):
+    mesh = meshes[index]
+    if (patch):
+        patch = pymesh.boolean(patch, mesh, 'union')
+    else:
+        patch = mesh
+
 backPatch = AffineMatrix().rotateY(math.pi).dot(patch)
 
-out = pymesh.merge_meshes([cup, patch, backPatch])
+out = pymesh.boolean(patch, backPatch, 'union')
 
 save_mesh_verbose('working/m.stl', out)

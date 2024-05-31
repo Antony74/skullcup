@@ -1,4 +1,4 @@
-all: skullcup.stl working/m.stl
+all: skullcup.stl working/mcup.stl
 
 clean:
 	rm -rf working/*.stl
@@ -51,6 +51,12 @@ working/cupCenteredIgnoringHandle.stl: working/cup.stl working/cupWithoutHandle.
 working/profile.json: working/cupCenteredIgnoringHandle.stl src/getProfile.py src/common/bandedMap.py src/common/linearMap.py
 	python3 src/getProfile.py
 
-working/m.stl: working/cupCenteredIgnoringHandle.stl working/prism.stl working/profile.json src/common/coordinates.py src/m.py src/test_coordinates.py
+working/m.stl: working/prism.stl working/profile.json src/common/coordinates.py src/m.py src/test_coordinates.py
 	python3 -m unittest src/test_coordinates.py
 	python3 src/m.py
+
+working/mWithoutCup.stl: working/m.stl working/cupCenteredIgnoringHandle.stl
+	python3 src/difference.py working/mWithoutCup.stl working/m.stl working/convexHullCenteredIgnoringHandle.stl
+
+working/mcup.stl: working/cupCenteredIgnoringHandle.stl working/mWithoutCup.stl
+	python3 src/union.py working/mcup.stl working/cupCenteredIgnoringHandle.stl working/mWithoutCup.stl 
