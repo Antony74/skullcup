@@ -51,5 +51,6 @@ working/cupCenteredIgnoringHandle.stl: working/cup.stl working/cupWithoutHandle.
 working/profile.json: working/cupCenteredIgnoringHandle.stl src/getProfile.py src/common/bandedMap.py src/common/linearMap.py
 	python3 src/getProfile.py
 
-working/m.stl: working/cupCenteredIgnoringHandle.stl working/prism.stl working/profile.json src/m.py
+working/m.stl: working/cupCenteredIgnoringHandle.stl working/prism.stl working/profile.json src/common/coordinates.py src/m.py src/test_coordinates.py
+	python3 -m unittest src/test_coordinates.py
 	python3 src/m.py
