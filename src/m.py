@@ -52,7 +52,6 @@ points = list(map(lambda pt: patchMap(pt).dot([1, 0, 0]),
                   [[0, 0], [0, 1], [0.5, 0.5], [1, 1], [1, 0]]))
 
 cupCorrection = [0.35, 0.5, 0.5, 0.35]
-elevationCorrection = [1, -1, 1, -1]
 
 for index in range(0, len(points) - 1):
     start = points[index]
