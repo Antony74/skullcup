@@ -1,5 +1,6 @@
 import json
 import math
+from common.coordinates import cartesianToSpherical
 import pymesh
 from common.AffineMatrix import AffineMatrix
 from common.bandedMap import createBandedMap
@@ -45,14 +46,6 @@ def patchMap(pt):
     return cupMap(linearMap(x, 0, 1, patchXMin * math.pi, patchXMax * math.pi), linearMap(y, 0, 1, patchYMin, patchYMax))
 
 
-def cartesianToSpherical(x, y, z):
-    XsqPlusYsq = x**2 + y**2
-    r = math.sqrt(XsqPlusYsq + z**2)                  # r
-    elevation = math.acos(z / r)                      # theta
-    azimuth = math.atan2(y, x)                        # phi
-    return r, elevation, azimuth
-
-
 meshes = []
 
 points = list(map(lambda pt: patchMap(pt).dot([1, 0, 0]),
@@ -66,18 +59,16 @@ for index in range(0, len(points) - 1):
     end = points[index + 1]
     vector = start - end
 
-    r, elevation, azimuth = cartesianToSpherical(
+    r, theta, phi = cartesianToSpherical(
         vector[0],
         vector[1],
         vector[2])
 
-    elevation -= 0.5 * math.pi
-
     meshes.append(AffineMatrix()
                   .scale(r, prismHeight, prismThickness)
                   .rotateX(cupCorrection[index] * math.pi)
-                  .rotateZ(azimuth + math.pi)
-                  .rotateX(elevation * elevationCorrection[index])
+                  .rotateY(theta)
+                  .rotateZ(phi + math.pi)
                   .translate(start[0], start[1], start[2])
                   .dot(unitPrism))
 
