@@ -6,7 +6,8 @@ from common.bandedMap import createBandedMap
 from common.helpers import save_mesh_verbose
 from common.linearMap import linearMap
 
-radiusAdjust = -0.5
+radiusAdjust = 5
+prismThickness = 5
 
 cup = pymesh.load_mesh('working/cupCenteredIgnoringHandle.stl')
 unitPrism = pymesh.load_mesh('working/prism.stl')
@@ -42,18 +43,31 @@ def patchMap(pt):
     y = pt[1]
     return cupMap(linearMap(x, 0, 1, patchXMin * math.pi, patchXMax * math.pi), linearMap(y, 0, 1, patchYMin, patchYMax))
 
+def cartesianToSpherical(x, y, z):
+    XsqPlusYsq = x**2 + y**2
+    r = math.sqrt(XsqPlusYsq + z**2)                 # r
+    elevation = math.atan2(z, math.sqrt(XsqPlusYsq)) # theta
+    azimuth = math.atan2(y, x)                       # phi
+    return r, elevation, azimuth
 
 meshes = []
 
 points = list(map(lambda pt: patchMap(pt).dot([1, 0, 0]),
                   [[0, 0], [0, 1], [0.5, 0.5], [1, 1], [1, 0]]))
 
-for index in range(0, len(points)):
-    point = points[index]
-    x = point[0]
-    y = point[1]
-    z = point[2]
-    meshes.append(AffineMatrix().translate(x, y, z).dot(unitPrism))
+for index in range(0, len(points) - 1):
+    start = points[index]
+    end = points[index + 1]
+    vector = start - end
+
+    r, elevation, azimuth = cartesianToSpherical(vector[0], vector[1], vector[2])
+
+    meshes.append(AffineMatrix()
+                  .scale(r, prismThickness, prismThickness)
+                  .rotateZ(azimuth + math.pi)
+                  .rotateX(-elevation)
+                  .translate(start[0], start[1], start[2])
+                  .dot(unitPrism))
 
 patch = pymesh.merge_meshes(meshes)
 backPatch = AffineMatrix().rotateY(math.pi).dot(patch)
