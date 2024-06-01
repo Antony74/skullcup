@@ -70,17 +70,13 @@ for index in range(0, len(points) - 1):
                   .translate(start[0], start[1], start[2])
                   .dot(unitPrism))
 
-patch = None
+out = None
 
 for index in range(len(meshes)):
     mesh = meshes[index]
-    if (patch):
-        patch = pymesh.boolean(patch, mesh, 'union')
+    if (out):
+        out = pymesh.boolean(out, mesh, 'union')
     else:
-        patch = mesh
-
-backPatch = AffineMatrix().rotateY(math.pi).dot(patch)
-
-out = pymesh.boolean(patch, backPatch, 'union')
+        out = mesh
 
 save_mesh_verbose('working/m.stl', out)

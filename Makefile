@@ -1,4 +1,4 @@
-all: skullcup.stl working/mcup.stl working/extrudedCup.stl
+all: skullcup.stl working/mcup.stl
 
 clean:
 	rm -rf working/*.stl
@@ -58,11 +58,15 @@ working/m.stl: working/prism.stl working/profile.json src/common/coordinates.py 
 working/mWithoutCup.stl: working/m.stl working/cupCenteredIgnoringHandle.stl
 	python3 src/difference.py working/mWithoutCup.stl working/m.stl working/convexHullCenteredIgnoringHandle.stl
 
-working/extrudedCup.stl: working/cupCenteredIgnoringHandle.stl src/extrudedCup.py
-	python3 src/extrudedCup.py
+working/partialCup.stl: working/cupCenteredIgnoringHandle.stl src/partialCup.py
+	python3 src/partialCup.py
 
-working/mWithSurface.stl: working/mWithoutCup.stl working/extrudedCup.stl
+working/extrudedCup.stl: working/partialCup.stl src/extrude.py
+	python3 src/extrude.py working/extrudedCup.stl working/partialCup.stl
+
+working/mWithSurface.stl: working/mWithoutCup.stl working/extrudedCup.stl src/intersection.py
 	python3 src/intersection.py working/mWithSurface.stl working/mWithoutCup.stl working/extrudedCup.stl
 
-working/mcup.stl: working/cupCenteredIgnoringHandle.stl working/mWithSurface.stl
-	python3 src/union.py working/mcup.stl working/cupCenteredIgnoringHandle.stl working/mWithSurface.stl 
+working/mcup.stl: working/mWithSurface.stl src/mcup.py
+	python3 src/mcup.py
+
