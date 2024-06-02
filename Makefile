@@ -64,8 +64,14 @@ working/partialCup.stl: working/cupCenteredIgnoringHandle.stl src/partialCup.py
 working/extrudedCup.stl: working/partialCup.stl src/extrude.py
 	python3 src/extrude.py working/extrudedCup.stl working/partialCup.stl
 
-working/mWithSurface.stl: working/mWithoutCup.stl working/extrudedCup.stl src/intersection.py
-	python3 src/intersection.py working/mWithSurface.stl working/mWithoutCup.stl working/extrudedCup.stl
+working/extrudedCup2.stl: working/extrudedCup.stl src/extrude.py
+	python3 src/extrude.py working/extrudedCup2.stl working/extrudedCup.stl
+
+working/extrudedCupFinal.stl: working/extrudedCup2.stl src/union.py
+	python3 src/union.py working/extrudedCupFinal.stl working/extrudedCup.stl working/extrudedCup2.stl
+
+working/mWithSurface.stl: working/mWithoutCup.stl working/extrudedCupFinal.stl src/intersection.py
+	python3 src/intersection.py working/mWithSurface.stl working/mWithoutCup.stl working/extrudedCupFinal.stl
 
 working/mcup.stl: working/mWithSurface.stl src/mcup.py
 	python3 src/mcup.py
