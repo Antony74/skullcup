@@ -4,7 +4,7 @@ from common.coordinates import cartesianToSpherical
 import pymesh
 from common.AffineMatrix import AffineMatrix
 from common.bandedMap import createBandedMap
-from common.helpers import save_mesh_verbose
+from common.helpers import createEmptyMesh, save_mesh_verbose
 from common.linearMap import linearMap
 
 radiusAdjust = -2
@@ -12,6 +12,10 @@ prismThickness = 7
 prismHeight = 25
 
 unitPrism = pymesh.load_mesh('working/prism.stl')
+maskTopRight = pymesh.load_mesh('working/maskTopRight.stl')
+maskBottomRight = pymesh.load_mesh('working/maskBottomRight.stl')
+maskTopLeft = pymesh.load_mesh('working/maskTopLeft.stl')
+maskBottomLeft = pymesh.load_mesh('working/maskBottomLeft.stl')
 
 with open('working/profile.json') as f:
     profile = json.load(f)
@@ -52,6 +56,9 @@ points = list(map(lambda pt: patchMap(pt).dot([1, 0, 0]),
 
 cupCorrection = [0.35, 0.5, 0.5, 0.35]
 
+masks = [[maskTopLeft, maskTopRight, maskBottomLeft, maskBottomRight], [], [], []]
+mask = createEmptyMesh()
+
 for index in range(0, len(points) - 1):
     start = points[index]
     end = points[index + 1]
@@ -62,21 +69,28 @@ for index in range(0, len(points) - 1):
         vector[1],
         vector[2])
 
-    meshes.append(AffineMatrix()
-                  .scale(r, prismHeight, prismThickness)
-                  .rotateX(cupCorrection[index] * math.pi)
-                  .rotateY(theta)
-                  .rotateZ(phi + math.pi)
-                  .translate(start[0], start[1], start[2])
-                  .dot(unitPrism))
+    matrix = (AffineMatrix()
+              .scale(r, prismHeight, prismThickness)
+              .rotateX(cupCorrection[index] * math.pi)
+              .rotateY(theta)
+              .rotateZ(phi + math.pi)
+              .translate(start[0], start[1], start[2]))
 
-out = None
+    mesh = matrix.dot(unitPrism)
+
+    for unitMash in masks[index]:
+        print('subtracting mask')
+        currentMask = matrix.dot(unitMash)
+        mask = pymesh.boolean(mask, currentMask, 'union')
+
+    meshes.append(mesh)
+
+out = createEmptyMesh()
 
 for index in range(len(meshes)):
     mesh = meshes[index]
-    if (out):
-        out = pymesh.boolean(out, mesh, 'union')
-    else:
-        out = mesh
+    out = pymesh.boolean(out, mesh, 'union')
+
+out = pymesh.boolean(out, mask, 'difference')
 
 save_mesh_verbose('working/m.stl', out)
