@@ -1,4 +1,4 @@
-all: skullcup.stl working/mcup.stl
+all: skullcup.stl mcup.stl
 
 clean:
 	rm -rf working/*.stl
@@ -40,7 +40,7 @@ working/skullWithCup.stl: working/skullWithoutCup.stl working/cup.stl src/union.
 skullcup.stl: working/skullWithCup.stl src/skullcup.py
 	python3 src/skullcup.py
 
-# M cup (WIP)
+# M cup (a cup with the letter 'M' on it)
 
 working/prism.stl: src/prism.py
 	python3 src/prism.py
@@ -73,6 +73,6 @@ working/extrudedCupFinal.stl: working/extrudedCup2.stl src/union.py
 working/mWithSurface.stl: working/mWithoutCup.stl working/extrudedCupFinal.stl src/intersection.py
 	python3 src/intersection.py working/mWithSurface.stl working/mWithoutCup.stl working/extrudedCupFinal.stl
 
-working/mcup.stl: working/mWithSurface.stl src/mcup.py
+mcup.stl: working/mWithSurface.stl src/mcup.py
 	python3 src/mcup.py
 
