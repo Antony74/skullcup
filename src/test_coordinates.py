@@ -49,7 +49,6 @@ class TestSpherical(unittest.TestCase):
 
     def test_pos_pos_pos(self):
         radius, phi, theta = cartesianToSpherical(3, 4, 5)
-        print(radius, phi, theta)
         x, y, z = sphericalToCartesian(radius, phi, theta)
         self.assertAlmostEqual(x, 3)
         self.assertAlmostEqual(y, 4)

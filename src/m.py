@@ -12,10 +12,6 @@ prismThickness = 7
 prismHeight = 25
 
 unitPrism = pymesh.load_mesh('working/prism.stl')
-maskTopRight = pymesh.load_mesh('working/maskTopRight.stl')
-maskBottomRight = pymesh.load_mesh('working/maskBottomRight.stl')
-maskTopLeft = pymesh.load_mesh('working/maskTopLeft.stl')
-maskBottomLeft = pymesh.load_mesh('working/maskBottomLeft.stl')
 unitCone = pymesh.load_mesh('working/cone.stl')
 
 with open('working/profile.json') as f:
@@ -64,9 +60,6 @@ points = list(map(lambda pt: patchMap(pt).dot([1, 0, 0]),
 
 cupCorrection = [0.35, 0.5, 0.5, 0.35]
 
-masks = [[], [], [], []]
-mask = createEmptyMesh()
-
 for index in range(0, len(points) - 1):
     start = points[index]
     end = points[index + 1]
@@ -85,11 +78,6 @@ for index in range(0, len(points) - 1):
     endCone = AffineMatrix().translate(-vector[0], -vector[1], -vector[2]).dot(cone)
     mesh = pymesh.boolean(mesh, endCone, 'union')
 
-    # for unitMask in masks[index]:
-    #     print('subtracting mask')
-    #     currentMask = matrix.dot(unitMask)
-    #     mask = pymesh.boolean(mask, currentMask, 'union')
-
     meshes.append(mesh)
 
 out = createEmptyMesh()
@@ -97,7 +85,5 @@ out = createEmptyMesh()
 for index in range(len(meshes)):
     mesh = meshes[index]
     out = pymesh.boolean(out, mesh, 'union')
-
-out = pymesh.boolean(out, mask, 'difference')
 
 save_mesh_verbose('working/m.stl', out)
