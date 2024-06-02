@@ -16,6 +16,7 @@ maskTopRight = pymesh.load_mesh('working/maskTopRight.stl')
 maskBottomRight = pymesh.load_mesh('working/maskBottomRight.stl')
 maskTopLeft = pymesh.load_mesh('working/maskTopLeft.stl')
 maskBottomLeft = pymesh.load_mesh('working/maskBottomLeft.stl')
+unitCone = pymesh.load_mesh('working/cone.stl')
 
 with open('working/profile.json') as f:
     profile = json.load(f)
@@ -48,6 +49,13 @@ def patchMap(pt):
     y = pt[1]
     return cupMap(linearMap(x, 0, 1, patchXMin * math.pi, patchXMax * math.pi), linearMap(y, 0, 1, patchYMin, patchYMax))
 
+def getVectorMappingMatrix(r, theta, phi, start):
+    return (AffineMatrix()
+              .scale(r, prismHeight, prismThickness)
+              .rotateX(cupCorrection[index] * math.pi)
+              .rotateY(theta)
+              .rotateZ(phi + math.pi)
+              .translate(start[0], start[1], start[2]))
 
 meshes = []
 
@@ -56,7 +64,7 @@ points = list(map(lambda pt: patchMap(pt).dot([1, 0, 0]),
 
 cupCorrection = [0.35, 0.5, 0.5, 0.35]
 
-masks = [[maskTopLeft, maskTopRight, maskBottomLeft, maskBottomRight], [], [], []]
+masks = [[], [], [], []]
 mask = createEmptyMesh()
 
 for index in range(0, len(points) - 1):
@@ -69,19 +77,18 @@ for index in range(0, len(points) - 1):
         vector[1],
         vector[2])
 
-    matrix = (AffineMatrix()
-              .scale(r, prismHeight, prismThickness)
-              .rotateX(cupCorrection[index] * math.pi)
-              .rotateY(theta)
-              .rotateZ(phi + math.pi)
-              .translate(start[0], start[1], start[2]))
+    mesh = getVectorMappingMatrix(r, theta, phi, start).dot(unitPrism)
 
-    mesh = matrix.dot(unitPrism)
+    cone = getVectorMappingMatrix(prismThickness, theta, phi, start).dot(unitCone)
+    mesh = pymesh.boolean(mesh, cone, 'union')
 
-    for unitMash in masks[index]:
-        print('subtracting mask')
-        currentMask = matrix.dot(unitMash)
-        mask = pymesh.boolean(mask, currentMask, 'union')
+    endCone = AffineMatrix().translate(-vector[0], -vector[1], -vector[2]).dot(cone)
+    mesh = pymesh.boolean(mesh, endCone, 'union')
+
+    # for unitMask in masks[index]:
+    #     print('subtracting mask')
+    #     currentMask = matrix.dot(unitMask)
+    #     mask = pymesh.boolean(mask, currentMask, 'union')
 
     meshes.append(mesh)
 

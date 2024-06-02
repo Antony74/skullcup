@@ -12,10 +12,10 @@ translationMatrix = AffineMatrix().translate(0.5, 0, 0)
 # is arbitrary, so there's a 50% chance I've assigned them correctly ;-)
 
 unitBox = pymesh.generate_box_mesh([-0.5, -0.5, -0.5], [0.5, 0.5, 0.5])
-maskTopRight = pymesh.generate_box_mesh([0, 0.5, -0.5], [0.5, 1.5, 0.5])
-maskBottomRight = pymesh.generate_box_mesh([-0.5, 0.5, -0.5], [0, 1.5, 0.5])
-maskTopLeft = pymesh.generate_box_mesh([0, -0.5, -1.5], [0.5, 0.5, -0.5])
-maskBottomLeft = pymesh.generate_box_mesh([-0.5, -0.5, -1.5], [0, 0.5, -0.5])
+maskTopRight = pymesh.generate_box_mesh([0, 0.5, -0.5], [1, 1.5, 0.5])
+maskBottomRight = pymesh.generate_box_mesh([-1, 0.5, -0.5], [0, 1.5, 0.5])
+maskTopLeft = pymesh.generate_box_mesh([0, -0.5, -1.5], [1, 0.5, -0.5])
+maskBottomLeft = pymesh.generate_box_mesh([-1, -0.5, -1.5], [0, 0.5, -0.5])
 
 unitBox = rotationMatrix.dot(unitBox)
 maskTopRight = rotationMatrix.dot(maskTopRight)
@@ -33,8 +33,17 @@ maskBottomRight = translationMatrix.dot(maskBottomRight)
 maskTopLeft = translationMatrix.dot(maskTopLeft)
 maskBottomLeft = translationMatrix.dot(maskBottomLeft)
 
+unitVector = pymesh.generate_box_mesh([0, -0.1, -0.1], [1, 0.1, 0.1])
+prism = pymesh.boolean(prism, unitVector, 'union')
+
+print(prism.bbox)
+
+coneHeight = prism.bbox[1][1]
+cone = pymesh.generate_cylinder([0, 0, 0], [0, coneHeight, 0], coneHeight, 0, num_segments=32)
+
 save_mesh_verbose('working/prism.stl', prism)
 save_mesh_verbose('working/maskTopRight.stl', maskTopRight)
 save_mesh_verbose('working/maskBottomRight.stl', maskBottomRight)
 save_mesh_verbose('working/maskTopLeft.stl', maskTopLeft)
 save_mesh_verbose('working/maskBottomLeft.stl', maskBottomLeft)
+save_mesh_verbose('working/cone.stl', cone)
