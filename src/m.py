@@ -23,12 +23,12 @@ profile = profile['profile']
 
 getBand = createBandedMap(bands, yMin, yMax)
 
-patchRadius = 0.15
+patchRadius = 0.12
 patchXMid = -0.5
 patchXMin = patchXMid - patchRadius
 patchXMax = patchXMid + patchRadius
-patchYMin = linearMap(0.3, 0, 1, yMin, yMax)
-patchYMax = linearMap(0.8, 0, 1, yMin, yMax)
+patchYMin = linearMap(0.35, 0, 1, yMin, yMax)
+patchYMax = linearMap(0.75, 0, 1, yMin, yMax)
 
 
 def cupMap(theta, y):
