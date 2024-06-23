@@ -2,16 +2,6 @@ import time
 from datetime import timedelta
 import numpy as np
 import pymesh
-from fix_mesh.fix_mesh import fix_mesh
-
-
-def load_fixed_mesh(originalFilename):
-    print('Loading ' + originalFilename)
-    mesh = pymesh.load_mesh(originalFilename)
-    mesh_info(mesh)
-    print('Fixing ' + originalFilename)
-    mesh = fix_mesh(mesh)
-    return mesh
 
 
 def mesh_info(mesh):
