@@ -1,9 +1,9 @@
 import pymesh
-from common.helpers import save_mesh_verbose
+from common.helpers import load_fixed_mesh, save_mesh_verbose
 from common.AffineMatrix import AffineMatrix
 
 # https://cults3d.com/en/3d-model/various/to-make-or-not-to-make
-skullMesh = pymesh.load_mesh('Scull_geant_fix02.stl')
+skullMesh = load_fixed_mesh('Scull_geant_fix02.stl')
 
 cupWithoutHandle = pymesh.load_mesh('working/cupWithoutHandle.stl')
 
