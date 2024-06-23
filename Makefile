@@ -11,7 +11,7 @@ working/handle.stl: src/handle.py src/common/AffineMatrix.py src/common/helpers.
 working/lip.stl: src/lip.py
 	python3 src/lip.py
 
-working/cup.stl: src/cup.py Coffee_Cup.A.1.stl src/common/AffineMatrix.py src/common/helpers.py
+working/cup.stl: src/cup.py Coffee_Cup.A.1.stl src/common/AffineMatrix.py src/common/helpers.py src/fix_mesh/fix_mesh.py
 	python3 src/cup.py
 
 working/cupWithoutHandle.stl: working/cup.stl working/handle.stl src/difference.py
@@ -25,7 +25,7 @@ working/convexHull.stl: working/cupWithoutHandleOrLip.stl src/convexHull.py
 
 # Skullcup
 
-working/skull.stl: src/skull.py Scull_geant_fix02.stl working/cupWithoutHandle.stl src/common/AffineMatrix.py src/common/helpers.py
+working/skull.stl: src/skull.py Scull_geant_fix02.stl working/cupWithoutHandle.stl src/common/AffineMatrix.py src/common/helpers.py src/fix_mesh/fix_mesh.py
 	python3 src/skull.py
 
 working/skullWithoutLip.stl: working/skull.stl working/lip.stl src/difference.py
