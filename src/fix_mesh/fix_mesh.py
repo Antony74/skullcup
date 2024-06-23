@@ -19,6 +19,7 @@ def fix_mesh(mesh, detail="normal"):
 
     print('remove_duplicated_vertices')
     mesh, __ = pymesh.remove_duplicated_vertices(mesh, 0.01)
+    mesh_info(mesh)
 
     # print('remove_degenerated_triangles')
     # mesh, __ = pymesh.remove_degenerated_triangles(mesh, 100)
@@ -32,9 +33,9 @@ def fix_mesh(mesh, detail="normal"):
     # mesh = pymesh.resolve_self_intersection(mesh)
     # mesh_info(mesh)
 
-    # print('remove_duplicated_faces')
-    # mesh, __ = pymesh.remove_duplicated_faces(mesh)
-    # mesh_info(mesh)
+    print('remove_duplicated_faces')
+    mesh, __ = pymesh.remove_duplicated_faces(mesh, 0.01)
+    mesh_info(mesh)
 
     # print('remove_obtuse_triangles')
     # mesh, __ = pymesh.remove_obtuse_triangles(mesh, 179.0, 5)
