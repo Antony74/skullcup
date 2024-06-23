@@ -30,4 +30,8 @@ def fix_mesh(mesh, tolerance=0.01):
     mesh = pymesh.resolve_self_intersection(mesh)
     mesh_info(mesh)
 
+    print('remove_duplicated_vertices 2')
+    mesh, __ = pymesh.remove_duplicated_vertices(mesh, tolerance)
+    mesh_info(mesh)
+
     return mesh
