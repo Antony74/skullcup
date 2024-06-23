@@ -30,12 +30,4 @@ def fix_mesh(mesh, tolerance=0.01):
     mesh = pymesh.resolve_self_intersection(mesh)
     mesh_info(mesh)
 
-    print('remove_obtuse_triangles')#
-    mesh, __ = pymesh.remove_obtuse_triangles(mesh, 179.0, 5)
-    mesh_info(mesh)
-
-    print('remove_isolated_vertices')#
-    mesh, __ = pymesh.remove_isolated_vertices(mesh)
-    mesh_info(mesh)
-
     return mesh
