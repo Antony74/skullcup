@@ -48,7 +48,7 @@ skullcup.stl: working/skullcupUnfixed.stl src/fix_mesh_cli.py src/fix_mesh/fix_m
 working/prism.stl: src/prism.py
 	python3 src/prism.py
 
-working/cupCenteredIgnoringHandle.stl: working/cup.stl working/cupWithoutHandle.stl src/cupCenteredIgnoringHandle.py
+working/cupCenteredIgnoringHandle.stl: working/cup.stl working/cupWithoutHandle.stl working/convexHull.stl src/cupCenteredIgnoringHandle.py
 	python3 src/cupCenteredIgnoringHandle.py
 
 working/profile.json: working/cupCenteredIgnoringHandle.stl src/getProfile.py src/common/bandedMap.py src/common/linearMap.py
