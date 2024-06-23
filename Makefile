@@ -37,8 +37,11 @@ working/skullWithoutCup.stl: working/skullWithoutLip.stl working/convexHull.stl 
 working/skullWithCup.stl: working/skullWithoutCup.stl working/cup.stl src/union.py
 	python3 src/union.py working/skullWithCup.stl working/skullWithoutCup.stl working/cup.stl
 
-skullcup.stl: working/skullWithCup.stl src/skullcup.py src/fix_mesh/fix_mesh.py
+working/skullcupUnfixed.stl: working/skullWithCup.stl src/skullcup.py
 	python3 src/skullcup.py
+
+skullcup.stl: working/skullcupUnfixed.stl src/fix_mesh_cli.py src/fix_mesh/fix_mesh.py
+	python3 src/fix_mesh_cli.py skullcup.stl working/skullcupUnfixed.stl
 
 # M cup (a cup with the letter 'M' on it)
 
@@ -73,6 +76,8 @@ working/extrudedCupFinal.stl: working/extrudedCup2.stl src/union.py
 working/mWithSurface.stl: working/mWithoutCup.stl working/extrudedCupFinal.stl src/intersection.py
 	python3 src/intersection.py working/mWithSurface.stl working/mWithoutCup.stl working/extrudedCupFinal.stl
 
-mcup.stl: working/mWithSurface.stl src/mcup.py src/skullcup.py src/fix_mesh/fix_mesh.py
+working/mcupUnfixed.stl: working/mWithSurface.stl src/mcup.py src/skullcup.py
 	python3 src/mcup.py
 
+mcup.stl: working/mcupUnfixed.stl src/fix_mesh_cli.py src/fix_mesh/fix_mesh.py
+	python3 src/fix_mesh_cli.py mcup.stl working/mcupUnfixed.stl
