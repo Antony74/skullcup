@@ -16,3 +16,12 @@ Usage:
 See also:
 
 - [Skullcup 3d model unboxing video](https://www.youtube.com/watch?v=ma1O-DAhuYg&t=1s)
+
+## M cup - Work in progress
+
+A cup with a letter M on it is also partially produced by the above make file.  We finish it off with a FreeCAD script
+
+    docker run -it -v .:/root amrit3701/freecad-cli python3 root/src/freecad_mcup.py
+
+For some reason FreeCAD's Constructive Solid Geometry (CSG) engine produces valid .stl when combining primitive shapes, something all pymesh's engines fall short of.  This might be a biased observation, however, as it was made with FreeCAD's validator!
+

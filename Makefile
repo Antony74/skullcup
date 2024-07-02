@@ -1,4 +1,4 @@
-all: skullcup.stl mcup.stl
+all: skullcup.stl working/m0.stl working/extrudedCupFinal.stl
 
 clean:
 	rm -rf working/*.stl
@@ -54,7 +54,7 @@ working/cupCenteredIgnoringHandle.stl: working/cup.stl working/cupWithoutHandle.
 working/profile.json: working/cupCenteredIgnoringHandle.stl src/getProfile.py src/common/bandedMap.py src/common/linearMap.py
 	python3 src/getProfile.py
 
-working/m.stl: working/prism.stl working/profile.json src/common/coordinates.py src/m.py src/test_coordinates.py
+working/m0.stl: working/prism.stl working/profile.json src/common/coordinates.py src/m.py src/test_coordinates.py
 	python3 -m unittest src/test_coordinates.py
 	python3 src/m.py
 
@@ -73,11 +73,3 @@ working/extrudedCup2.stl: working/extrudedCup.stl src/extrude.py
 working/extrudedCupFinal.stl: working/extrudedCup2.stl src/union.py
 	python3 src/union.py working/extrudedCupFinal.stl working/extrudedCup.stl working/extrudedCup2.stl
 
-working/mWithSurface.stl: working/mWithoutCup.stl working/extrudedCupFinal.stl src/intersection.py
-	python3 src/intersection.py working/mWithSurface.stl working/mWithoutCup.stl working/extrudedCupFinal.stl
-
-working/mcupUnfixed.stl: working/mWithSurface.stl src/mcup.py src/skullcup.py
-	python3 src/mcup.py
-
-mcup.stl: working/mcupUnfixed.stl src/fix_mesh_cli.py src/fix_mesh/fix_mesh.py
-	python3 src/fix_mesh_cli.py mcup.stl working/mcupUnfixed.stl
