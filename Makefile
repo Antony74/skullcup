@@ -45,7 +45,7 @@ skullcup.stl: working/skullcupUnfixed.stl src/fix_mesh_cli.py src/fix_mesh/fix_m
 
 # M cup (a cup with the letter 'M' on it)
 
-working/prism.stl: src/prism.py
+working/prism.stl: src/prism.py src/common/helpers.py
 	python3 src/prism.py
 
 working/cupCenteredIgnoringHandle.stl: working/cup.stl working/cupWithoutHandle.stl working/convexHull.stl src/cupCenteredIgnoringHandle.py

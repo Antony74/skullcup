@@ -45,13 +45,15 @@ def patchMap(pt):
     y = pt[1]
     return cupMap(linearMap(x, 0, 1, patchXMin * math.pi, patchXMax * math.pi), linearMap(y, 0, 1, patchYMin, patchYMax))
 
+
 def getVectorMappingMatrix(r, theta, phi, start):
     return (AffineMatrix()
-              .scale(r, prismHeight, prismThickness)
-              .rotateX(cupCorrection[index] * math.pi)
-              .rotateY(theta)
-              .rotateZ(phi + math.pi)
-              .translate(start[0], start[1], start[2]))
+            .scale(r, prismHeight, prismThickness)
+            .rotateX(cupCorrection[index] * math.pi)
+            .rotateY(theta)
+            .rotateZ(phi + math.pi)
+            .translate(start[0], start[1], start[2]))
+
 
 meshes = []
 
@@ -70,20 +72,36 @@ for index in range(0, len(points) - 1):
         vector[1],
         vector[2])
 
-    mesh = getVectorMappingMatrix(r, theta, phi, start).dot(unitPrism)
+    prism = getVectorMappingMatrix(r, theta, phi, start).dot(unitPrism)
+    meshes.append(prism)
 
-    cone = getVectorMappingMatrix(prismThickness, theta, phi, start).dot(unitCone)
-    mesh = pymesh.boolean(mesh, cone, 'union')
+    cone = getVectorMappingMatrix(
+        prismThickness, theta, phi, start
+    ).dot(unitCone)
 
-    endCone = AffineMatrix().translate(-vector[0], -vector[1], -vector[2]).dot(cone)
-    mesh = pymesh.boolean(mesh, endCone, 'union')
+    meshes.append(cone)
 
-    meshes.append(mesh)
+    cone = AffineMatrix().translate(
+        -vector[0], -vector[1], -vector[2]
+    ).dot(cone)
 
-out = createEmptyMesh()
+    meshes.append(cone)
 
-for index in range(len(meshes)):
-    mesh = meshes[index]
-    out = pymesh.boolean(out, mesh, 'union')
+csg = pymesh.CSGTree({
+    'union': [
+        {'mesh': meshes[0]},
+        {'mesh': meshes[1]},
+        {'mesh': meshes[2]},
+        {'mesh': meshes[3]},
+        {'mesh': meshes[4]},
+        {'mesh': meshes[5]},
+        {'mesh': meshes[6]},
+        {'mesh': meshes[7]},
+        {'mesh': meshes[8]},
+        {'mesh': meshes[9]},
+        {'mesh': meshes[10]},
+        {'mesh': meshes[11]},
+    ]
+})
 
-save_mesh_verbose('working/m.stl', out)
+save_mesh_verbose('working/m.stl', csg.mesh)

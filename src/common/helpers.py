@@ -22,10 +22,10 @@ def mesh_info(mesh):
 start_time = time.monotonic()
 
 
-def save_mesh_verbose(filename, mesh):
+def save_mesh_verbose(filename, mesh, ascii=False):
     print('Saving ' + filename)
     mesh_info(mesh)
-    pymesh.save_mesh(filename, mesh)
+    pymesh.save_mesh(filename, mesh, ascii=ascii)
     end_time = time.monotonic()
     print(timedelta(seconds=end_time - start_time))
 
