@@ -50,6 +50,6 @@ coneHeight = prism.bbox[1][1]
 coneBase = -0.1
 coneRadius = linearMap(coneBase, 0, coneHeight, coneHeight, 0)
 
-cone = generateCone(0, coneBase, 0, coneHeight, coneRadius, 4)
+cone = generateCone(0, coneBase, 0, coneHeight + 0.1, coneRadius, 32)
 
 save_mesh_verbose('working/cone.stl', cone)
