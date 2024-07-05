@@ -53,20 +53,12 @@ def getVectorMappingMatrix(r, theta, phi, start):
               .rotateZ(phi + math.pi)
               .translate(start[0], start[1], start[2]))
 
+meshes = []
 
 points = list(map(lambda pt: patchMap(pt).dot([1, 0, 0]),
                   [[0, 0], [0, 1], [0.5, 0.5], [1, 1], [1, 0]]))
 
 cupCorrection = [0.35, 0.5, 0.5, 0.35]
-
-meshCount = 0
-
-def writeMesh(mesh):
-    global meshCount
-    filename = 'working/m' + str(meshCount) + '.stl'
-    save_mesh_verbose(filename, mesh)
-    meshCount += 1
-
 
 for index in range(0, len(points) - 1):
     start = points[index]
@@ -79,14 +71,19 @@ for index in range(0, len(points) - 1):
         vector[2])
 
     mesh = getVectorMappingMatrix(r, theta, phi, start).dot(unitPrism)
-    writeMesh(mesh)
 
     cone = getVectorMappingMatrix(prismThickness, theta, phi, start).dot(unitCone)
     mesh = pymesh.boolean(mesh, cone, 'union')
-    writeMesh(mesh)
 
     endCone = AffineMatrix().translate(-vector[0], -vector[1], -vector[2]).dot(cone)
     mesh = pymesh.boolean(mesh, endCone, 'union')
-    writeMesh(mesh)
 
+    meshes.append(mesh)
 
+out = createEmptyMesh()
+
+for index in range(len(meshes)):
+    mesh = meshes[index]
+    out = pymesh.boolean(out, mesh, 'union')
+
+save_mesh_verbose('working/m.stl', out)
