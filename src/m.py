@@ -82,9 +82,11 @@ for index in range(0, len(points) - 1):
     writeMesh(mesh)
 
     cone = getVectorMappingMatrix(prismThickness, theta, phi, start).dot(unitCone)
-    writeMesh(cone)
+    mesh = pymesh.boolean(mesh, cone, 'union')
+    writeMesh(mesh)
 
     endCone = AffineMatrix().translate(-vector[0], -vector[1], -vector[2]).dot(cone)
-    writeMesh(endCone)
+    mesh = pymesh.boolean(mesh, endCone, 'union')
+    writeMesh(mesh)
 
 
