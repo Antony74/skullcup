@@ -1,10 +1,7 @@
 import pymesh
 from numpy.linalg import norm
-import numpy as np
+from fix_mesh.mesh_info import mesh_info
 
-def mesh_info(mesh):
-    print('vertices ' + str(len(mesh.vertices)) +
-          ', faces ' + str(len(mesh.faces)))
 
 def fix_mesh_lite(mesh, tolerance=0.01):
     bbox_min, bbox_max = mesh.bbox
@@ -36,4 +33,3 @@ def fix_mesh_lite(mesh, tolerance=0.01):
     mesh_info(mesh)
 
     return mesh
-

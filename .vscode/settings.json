@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "amax",
         "amrit",
         "cgal",
         "fillup",
@@ -7,8 +8,11 @@
         "geant",
         "linalg",
         "mcup",
+        "meshio",
         "pymesh",
+        "Remesh",
         "skullcup",
+        "timethis",
         "voxels"
     ]
 }

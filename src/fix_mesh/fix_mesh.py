@@ -38,7 +38,8 @@ def fix_mesh(mesh, detail="normal"):
         num_vertices = mesh.num_vertices
         print("#v: {}".format(num_vertices))
         count += 1
-        if count > 10: break
+        if count > 10:
+            break
 
     mesh = pymesh.resolve_self_intersection(mesh)
     mesh, __ = pymesh.remove_duplicated_faces(mesh)
@@ -69,13 +70,15 @@ def old_fix_mesh(vertices, faces, detail="normal"):
         vertices, faces = pymesh.collapse_short_edges(vertices, faces, 1e-6)
         vertices, faces = pymesh.collapse_short_edges(vertices, faces,
                                                       target_len, preserve_feature=True)
-        vertices, faces = pymesh.remove_obtuse_triangles(vertices, faces, 150.0, 100)
+        vertices, faces = pymesh.remove_obtuse_triangles(
+            vertices, faces, 150.0, 100)
         if num_vertices == len(vertices):
             break
         num_vertices = len(vertices)
         print("#v: {}".format(num_vertices))
         count += 1
-        if count > 10: break
+        if count > 10:
+            break
 
     vertices, faces = pymesh.resolve_self_intersection(vertices, faces)
     vertices, faces = pymesh.remove_duplicated_faces(vertices, faces)
