@@ -32,9 +32,9 @@ def fix_mesh(mesh, detail="normal", max_repeat=10):
     mesh, __ = pymesh.remove_degenerated_triangles(mesh, 100)
     mesh_info(mesh)
 
-    print('split_long_edges')
-    mesh, __ = pymesh.split_long_edges(mesh, target_len)
-    mesh_info(mesh)
+    # print('split_long_edges')
+    # mesh, __ = pymesh.split_long_edges(mesh, target_len)
+    # mesh_info(mesh)
 
     num_vertices = mesh.num_vertices
     while True:
