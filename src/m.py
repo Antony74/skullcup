@@ -4,8 +4,9 @@ from common.coordinates import cartesianToSpherical
 import pymesh
 from common.AffineMatrix import AffineMatrix
 from common.bandedMap import createBandedMap
-from common.helpers import createEmptyMesh, save_mesh_verbose
+from common.helpers import save_mesh_verbose
 from common.linearMap import linearMap
+from fix_mesh.fix_mesh import fix_mesh
 
 radiusAdjust = -2
 prismThickness = 7
@@ -104,4 +105,6 @@ csg = pymesh.CSGTree({
     ]
 })
 
-save_mesh_verbose('working/m.stl', csg.mesh)
+out = fix_mesh(csg.mesh, detail='high', max_repeat=0)
+
+save_mesh_verbose('working/m.stl', out)
