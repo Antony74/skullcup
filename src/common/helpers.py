@@ -2,7 +2,7 @@ import time
 from datetime import timedelta
 import numpy as np
 import pymesh
-from fix_mesh.fix_mesh import fix_mesh
+from fix_mesh.fix_mesh_lite import fix_mesh_lite
 
 
 def load_fixed_mesh(originalFilename):
@@ -10,7 +10,7 @@ def load_fixed_mesh(originalFilename):
     mesh = pymesh.load_mesh(originalFilename)
     mesh_info(mesh)
     print('Fixing ' + originalFilename)
-    mesh = fix_mesh(mesh)
+    mesh = fix_mesh_lite(mesh)
     return mesh
 
 

@@ -11,7 +11,7 @@ working/handle.stl: src/handle.py src/common/AffineMatrix.py src/common/helpers.
 working/lip.stl: src/lip.py
 	python3 src/lip.py
 
-working/cup.stl: src/cup.py Coffee_Cup.A.1.stl src/common/AffineMatrix.py src/common/helpers.py src/fix_mesh/fix_mesh.py
+working/cup.stl: src/cup.py Coffee_Cup.A.1.stl src/common/AffineMatrix.py src/common/helpers.py src/fix_mesh/fix_mesh_lite.py
 	python3 src/cup.py
 
 working/cupWithoutHandle.stl: working/cup.stl working/handle.stl src/difference.py
@@ -25,7 +25,7 @@ working/convexHull.stl: working/cupWithoutHandleOrLip.stl src/convexHull.py
 
 # Skullcup
 
-working/skull.stl: src/skull.py Scull_geant_fix02.stl working/cupWithoutHandle.stl src/common/AffineMatrix.py src/common/helpers.py src/fix_mesh/fix_mesh.py
+working/skull.stl: src/skull.py Scull_geant_fix02.stl working/cupWithoutHandle.stl src/common/AffineMatrix.py src/common/helpers.py src/fix_mesh/fix_mesh_lite.py
 	python3 src/skull.py
 
 working/skullWithoutLip.stl: working/skull.stl working/lip.stl src/difference.py
@@ -40,8 +40,8 @@ working/skullWithCup.stl: working/skullWithoutCup.stl working/cup.stl src/union.
 working/skullcupUnfixed.stl: working/skullWithCup.stl src/skullcup.py
 	python3 src/skullcup.py
 
-skullcup.stl: working/skullcupUnfixed.stl src/fix_mesh_cli.py src/fix_mesh/fix_mesh.py
-	python3 src/fix_mesh_cli.py skullcup.stl working/skullcupUnfixed.stl
+skullcup.stl: working/skullcupUnfixed.stl src/fix_mesh_lite_cli.py src/fix_mesh/fix_mesh_lite.py
+	python3 src/fix_mesh_lite_cli.py skullcup.stl working/skullcupUnfixed.stl
 
 # M cup (a cup with the letter 'M' on it)
 
@@ -76,8 +76,6 @@ working/extrudedCupFinal.stl: working/extrudedCup2.stl src/union.py
 working/mWithSurface.stl: working/mWithoutCup.stl working/extrudedCupFinal.stl src/intersection.py
 	python3 src/intersection.py working/mWithSurface.stl working/mWithoutCup.stl working/extrudedCupFinal.stl
 
-working/mcupUnfixed.stl: working/mWithSurface.stl src/mcup.py src/skullcup.py
+mcup.stl: working/mWithSurface.stl src/mcup.py src/skullcup.py
 	python3 src/mcup.py
 
-mcup.stl: working/mcupUnfixed.stl src/fix_mesh_cli.py src/fix_mesh/fix_mesh.py
-	python3 src/fix_mesh_cli.py mcup.stl working/mcupUnfixed.stl
