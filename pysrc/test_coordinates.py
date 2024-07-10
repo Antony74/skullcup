@@ -1,7 +1,7 @@
 import math
 import unittest
 
-from src.common.coordinates import cartesianToPolar, cartesianToSpherical, polarToCartesian, sphericalToCartesian
+from pysrc.common.coordinates import cartesianToPolar, cartesianToSpherical, polarToCartesian, sphericalToCartesian
 
 
 class TestPolar(unittest.TestCase):

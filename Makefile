@@ -5,77 +5,77 @@ clean:
 
 # Cup
 
-working/handle.stl: src/handle.py src/common/AffineMatrix.py src/common/helpers.py
-	python3 src/handle.py
+working/handle.stl: pysrc/handle.py pysrc/common/AffineMatrix.py pysrc/common/helpers.py
+	python3 pysrc/handle.py
 
-working/lip.stl: src/lip.py
-	python3 src/lip.py
+working/lip.stl: pysrc/lip.py
+	python3 pysrc/lip.py
 
-working/cup.stl: src/cup.py Coffee_Cup.A.1.stl src/common/AffineMatrix.py src/common/helpers.py src/fix_mesh/fix_mesh_lite.py
-	python3 src/cup.py
+working/cup.stl: pysrc/cup.py Coffee_Cup.A.1.stl pysrc/common/AffineMatrix.py pysrc/common/helpers.py pysrc/fix_mesh/fix_mesh_lite.py
+	python3 pysrc/cup.py
 
-working/cupWithoutHandle.stl: working/cup.stl working/handle.stl src/difference.py
-	python3 src/difference.py working/cupWithoutHandle.stl working/cup.stl working/handle.stl
+working/cupWithoutHandle.stl: working/cup.stl working/handle.stl pysrc/difference.py
+	python3 pysrc/difference.py working/cupWithoutHandle.stl working/cup.stl working/handle.stl
 
-working/cupWithoutHandleOrLip.stl: working/cupWithoutHandle.stl working/lip.stl src/difference.py
-	python3 src/difference.py working/cupWithoutHandleOrLip.stl working/cupWithoutHandle.stl working/lip.stl
+working/cupWithoutHandleOrLip.stl: working/cupWithoutHandle.stl working/lip.stl pysrc/difference.py
+	python3 pysrc/difference.py working/cupWithoutHandleOrLip.stl working/cupWithoutHandle.stl working/lip.stl
 
-working/convexHull.stl: working/cupWithoutHandleOrLip.stl src/convexHull.py
-	python3 src/convexHull.py working/convexHull.stl working/cupWithoutHandleOrLip.stl
+working/convexHull.stl: working/cupWithoutHandleOrLip.stl pysrc/convexHull.py
+	python3 pysrc/convexHull.py working/convexHull.stl working/cupWithoutHandleOrLip.stl
 
 # Skullcup
 
-working/skull.stl: src/skull.py Scull_geant_fix02.stl working/cupWithoutHandle.stl src/common/AffineMatrix.py src/common/helpers.py src/fix_mesh/fix_mesh_lite.py
-	python3 src/skull.py
+working/skull.stl: pysrc/skull.py Scull_geant_fix02.stl working/cupWithoutHandle.stl pysrc/common/AffineMatrix.py pysrc/common/helpers.py pysrc/fix_mesh/fix_mesh_lite.py
+	python3 pysrc/skull.py
 
-working/skullWithoutLip.stl: working/skull.stl working/lip.stl src/difference.py
-	python3 src/difference.py working/skullWithoutLip.stl working/skull.stl working/lip.stl
+working/skullWithoutLip.stl: working/skull.stl working/lip.stl pysrc/difference.py
+	python3 pysrc/difference.py working/skullWithoutLip.stl working/skull.stl working/lip.stl
 
-working/skullWithoutCup.stl: working/skullWithoutLip.stl working/convexHull.stl src/difference.py
-	python3 src/difference.py working/skullWithoutCup.stl working/skullWithoutLip.stl working/convexHull.stl
+working/skullWithoutCup.stl: working/skullWithoutLip.stl working/convexHull.stl pysrc/difference.py
+	python3 pysrc/difference.py working/skullWithoutCup.stl working/skullWithoutLip.stl working/convexHull.stl
 
-working/skullWithCup.stl: working/skullWithoutCup.stl working/cup.stl src/union.py
-	python3 src/union.py working/skullWithCup.stl working/skullWithoutCup.stl working/cup.stl
+working/skullWithCup.stl: working/skullWithoutCup.stl working/cup.stl pysrc/union.py
+	python3 pysrc/union.py working/skullWithCup.stl working/skullWithoutCup.stl working/cup.stl
 
-working/skullcupUnfixed.stl: working/skullWithCup.stl src/skullcup.py
-	python3 src/skullcup.py
+working/skullcupUnfixed.stl: working/skullWithCup.stl pysrc/skullcup.py
+	python3 pysrc/skullcup.py
 
-skullcup.stl: working/skullcupUnfixed.stl src/fix_mesh_lite_cli.py src/fix_mesh/fix_mesh_lite.py
-	python3 src/fix_mesh_lite_cli.py skullcup.stl working/skullcupUnfixed.stl
+skullcup.stl: working/skullcupUnfixed.stl pysrc/fix_mesh_lite_cli.py pysrc/fix_mesh/fix_mesh_lite.py
+	python3 pysrc/fix_mesh_lite_cli.py skullcup.stl working/skullcupUnfixed.stl
 
 # M cup (a cup with the letter 'M' on it)
 
-working/prism.stl: src/prism.py src/common/helpers.py
-	python3 src/prism.py
+working/prism.stl: pysrc/prism.py pysrc/common/helpers.py
+	python3 pysrc/prism.py
 
-working/cupCenteredIgnoringHandle.stl: working/cup.stl working/cupWithoutHandle.stl working/convexHull.stl src/cupCenteredIgnoringHandle.py
-	python3 src/cupCenteredIgnoringHandle.py
+working/cupCenteredIgnoringHandle.stl: working/cup.stl working/cupWithoutHandle.stl working/convexHull.stl pysrc/cupCenteredIgnoringHandle.py
+	python3 pysrc/cupCenteredIgnoringHandle.py
 
-working/profile.json: working/cupCenteredIgnoringHandle.stl src/getProfile.py src/common/bandedMap.py src/common/linearMap.py
-	python3 src/getProfile.py
+working/profile.json: working/cupCenteredIgnoringHandle.stl pysrc/getProfile.py pysrc/common/bandedMap.py pysrc/common/linearMap.py
+	python3 pysrc/getProfile.py
 
-working/m.stl: working/prism.stl working/profile.json src/common/coordinates.py src/m.py src/test_coordinates.py
-	python3 -m unittest src/test_coordinates.py
-	python3 src/m.py
+working/m.stl: working/prism.stl working/profile.json pysrc/common/coordinates.py pysrc/m.py pysrc/test_coordinates.py
+	python3 -m unittest pysrc/test_coordinates.py
+	python3 pysrc/m.py
 
 working/mWithoutCup.stl: working/m.stl working/cupCenteredIgnoringHandle.stl
-	python3 src/difference.py working/mWithoutCup.stl working/m.stl working/convexHullCenteredIgnoringHandle.stl
+	python3 pysrc/difference.py working/mWithoutCup.stl working/m.stl working/convexHullCenteredIgnoringHandle.stl
 
-working/partialCup.stl: working/cupCenteredIgnoringHandle.stl src/partialCup.py
-	python3 src/partialCup.py
+working/partialCup.stl: working/cupCenteredIgnoringHandle.stl pysrc/partialCup.py
+	python3 pysrc/partialCup.py
 
-working/extrudedCup.stl: working/partialCup.stl src/extrude.py
-	python3 src/extrude.py working/extrudedCup.stl working/partialCup.stl
+working/extrudedCup.stl: working/partialCup.stl pysrc/extrude.py
+	python3 pysrc/extrude.py working/extrudedCup.stl working/partialCup.stl
 
-working/extrudedCup2.stl: working/extrudedCup.stl src/extrude.py
-	python3 src/extrude.py working/extrudedCup2.stl working/extrudedCup.stl
+working/extrudedCup2.stl: working/extrudedCup.stl pysrc/extrude.py
+	python3 pysrc/extrude.py working/extrudedCup2.stl working/extrudedCup.stl
 
-working/extrudedCupFinal.stl: working/extrudedCup2.stl src/union.py
-	python3 src/union.py working/extrudedCupFinal.stl working/extrudedCup.stl working/extrudedCup2.stl
+working/extrudedCupFinal.stl: working/extrudedCup2.stl pysrc/union.py
+	python3 pysrc/union.py working/extrudedCupFinal.stl working/extrudedCup.stl working/extrudedCup2.stl
 
-working/mWithSurface.stl: working/mWithoutCup.stl working/extrudedCupFinal.stl src/intersection.py
-	python3 src/intersection.py working/mWithSurface.stl working/mWithoutCup.stl working/extrudedCupFinal.stl
+working/mWithSurface.stl: working/mWithoutCup.stl working/extrudedCupFinal.stl pysrc/intersection.py
+	python3 pysrc/intersection.py working/mWithSurface.stl working/mWithoutCup.stl working/extrudedCupFinal.stl
 
-mcup.stl: working/mWithSurface.stl src/mcup.py src/skullcup.py
-	python3 src/mcup.py
+mcup.stl: working/mWithSurface.stl pysrc/mcup.py pysrc/skullcup.py
+	python3 pysrc/mcup.py
 

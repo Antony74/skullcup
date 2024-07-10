@@ -5,7 +5,7 @@ from common.helpers import save_mesh_verbose
 
 if (len(sys.argv) != 3):
     print(
-        'Usage: python3 src/fix_mesh_lite_cli.py [output-mesh].stl [input-mesh].stl')
+        'Usage: python3 pysrc/fix_mesh_lite_cli.py [output-mesh].stl [input-mesh].stl')
     exit(1)
 
 inputMesh = pymesh.load_mesh(sys.argv[2])

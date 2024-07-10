@@ -3,7 +3,7 @@ import pymesh
 from common.helpers import save_mesh_verbose
 
 if (len(sys.argv) != 4):
-    print('Usage: python3 src/union.py [output-mesh].stl [in1].stl [in2].stl')
+    print('Usage: python3 pysrc/union.py [output-mesh].stl [in1].stl [in2].stl')
     exit(1)
 
 print(sys.argv[1].split('/').pop() + ' = ' +

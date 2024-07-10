@@ -7,7 +7,7 @@ scaleFactor = 1.05
 
 if (len(sys.argv) != 3):
     print(
-        'Usage: python3 src/extrude.py [output].stl [input].stl')
+        'Usage: python3 pysrc/extrude.py [output].stl [input].stl')
     exit(1)
 
 mesh = pymesh.load_mesh(sys.argv[2])
