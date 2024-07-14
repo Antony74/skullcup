@@ -1,0 +1,19 @@
+{
+    "name": "skullcup",
+    "version": "1.0.0",
+    "scripts": {
+        "start": "ts-node src/index.ts"
+    },
+    "author": "Antony74",
+    "license": "GPL-3.0-only",
+    "prettier": {
+        "tabWidth": 4,
+        "singleQuote": true
+    },
+    "dependencies": {
+        "@types/node": "^20.14.10",
+        "pyodide": "^0.26.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.5.3"
+    }
+}

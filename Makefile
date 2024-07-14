@@ -1,4 +1,4 @@
-all: skullcup.stl mcup.stl
+all: skullcup.stl mcup.stl typescript.play
 
 clean:
 	rm -rf working/*.stl
@@ -76,6 +76,8 @@ working/extrudedCupFinal.stl: working/extrudedCup2.stl pysrc/union.py
 working/mWithSurface.stl: working/mWithoutCup.stl working/extrudedCupFinal.stl pysrc/intersection.py
 	python3 pysrc/intersection.py working/mWithSurface.stl working/mWithoutCup.stl working/extrudedCupFinal.stl
 
-mcup.stl: working/mWithSurface.stl pysrc/mcup.py pysrc/skullcup.py
+mcup.stl: working/mWithSurface.stl pysrc/mcup.py pysrc/skullcup.py package.json
 	python3 pysrc/mcup.py
 
+typescript.play: package.json src/index.ts
+	npm start
