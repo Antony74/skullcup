@@ -6,5 +6,6 @@ RUN apt-get install -y nodejs
 
 WORKDIR /root
 COPY ./package.json /root/package.json
+COPY ./src/postInstall.ts /root/src/postInstall.ts
 RUN npm install
 

@@ -2,6 +2,7 @@
     "name": "skullcup",
     "version": "1.0.0",
     "scripts": {
+        "postinstall": "ts-node src/postInstall.ts",
         "start": "ts-node src/index.ts"
     },
     "author": "Antony74",
