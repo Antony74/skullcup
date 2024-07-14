@@ -9,9 +9,13 @@ I would really like to be able to automate these downloads in a way which is con
 
 Output is a file also in this directory called skullcup.stl
 
-## Usage
+## Build
 
-    docker run -it -v .:/root pymesh/pymesh make
+    docker build --tag akb74/skullcup .
+
+## Run
+
+    docker run -it -v .:/root akb74/skullcup make
 
 ## Mesh validation
 
