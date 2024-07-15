@@ -3,3 +3,5 @@ __pycache__
 working
 node_modules
 .npm
+.parcel-cache
+dist
