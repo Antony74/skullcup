@@ -1,35 +1,44 @@
 import { loadPyodide } from 'pyodide';
 
-const pythonCode = `
-def is_point_in_simplex(vertices, point):
-    import numpy as np
-    from scipy.optimize import linprog
+type _TupleOf<T, N extends number, R extends T[]> = R['length'] extends N
+    ? R
+    : _TupleOf<T, N, [T, ...R]>;
 
-    vertices = np.array(vertices)
-    point = np.array(point)
-    num_vertices = vertices.shape[0]
-    A = np.hstack((vertices.T, np.ones((vertices.shape[1], 1))))
-    b = np.append(point, 1)
-    try:
-        barycentric_coords = np.linalg.solve(A, b)
-    except np.linalg.LinAlgError:
-        return False
-    return np.all(barycentric_coords >= 0) and np.isclose(barycentric_coords.sum(), 1)
+type Tuple<T, N extends number> = _TupleOf<T, N, []>;
 
-# Example usage
-vertices = [[0, 0], [1, 0], [0, 1]]
-point_inside = [0.25, 0.25]
-point_outside = [1, 1]
+type NumberTuple<N extends number> = Tuple<number, N>;
 
-print(is_point_in_simplex(vertices, point_inside))  # Should return True
-print(is_point_in_simplex(vertices, point_outside)) # Should return False
-`;
+type Matrix<N extends number, M extends number> = Tuple<NumberTuple<N>, M>;
+
+const linalg = async <N extends number, M extends number>(
+    matrix: Matrix<N, M>,
+    vector: NumberTuple<N>
+): Promise<NumberTuple<N>> => {
+    const pyodide = await loadPyodide();
+
+    await pyodide.loadPackage('numpy');
+    await pyodide.runPythonAsync(`import numpy as np`);
+
+    pyodide.globals.set('matrix', matrix);
+    pyodide.globals.set('vector', vector);
+
+    const result = await pyodide.runPythonAsync(
+        `np.linalg.solve(matrix, vector)`
+    );
+    return result.toJs();
+};
 
 const main = async () => {
-    const pyodide = await loadPyodide();
-//    await pyodide.loadPackage('numpy');
-    await pyodide.loadPackage('scipy');
-    pyodide.runPythonAsync(pythonCode);
+    const matrix: Matrix<3, 3> = [
+        [0, 1, 0],
+        [0, 0, 1],
+        [1, 1, 1],
+    ];
+
+    const vector: NumberTuple<3> = [0.25, 0.25, 1];
+
+    const result = await linalg<3, 3>(matrix, vector);
+    console.log(result);
 };
 
 main();

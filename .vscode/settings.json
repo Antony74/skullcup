@@ -8,6 +8,7 @@
         "geant",
         "hstack",
         "isclose",
+        "jsglobals",
         "linalg",
         "linprog",
         "mcup",
@@ -21,6 +22,7 @@
         "skullcup",
         "timethis",
         "vhigh",
-        "voxels"
+        "voxels",
+        "vstack"
     ]
 }
