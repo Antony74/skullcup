@@ -79,5 +79,6 @@ working/mWithSurface.stl: working/mWithoutCup.stl working/extrudedCupFinal.stl p
 mcup.stl: working/mWithSurface.stl pysrc/mcup.py pysrc/skullcup.py package.json
 	python3 pysrc/mcup.py
 
-typescript.play: package.json src/index.ts
-	npm start
+typescript.play: package.json src/index.ts simplexPlay.py
+	python3 simplexPlay.py
+	# npm start
