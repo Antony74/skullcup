@@ -12,13 +12,14 @@
 
 //import { Add } from 'ts-arithmetic';
 import { solve } from './linalg';
-import { Vector, TupleSize, Matrix } from './tuples';
+import { Vector, TupleSize, Matrix, matrixTranspose } from './tuples';
 
 export const pointInSimplex = async <N extends TupleSize, M extends TupleSize>(
     vertices: Matrix<N, M>,
     point: Vector<N>
 ) => {
     const matrix = [
+        // ...matrixTranspose(vertices),
         ...point.map((_value, index) => {
             return vertices.map((value) => value[index]);
         }),
