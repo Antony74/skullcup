@@ -19,10 +19,7 @@ export const pointInSimplex = async <N extends TupleSize, M extends TupleSize>(
     point: Vector<N>
 ) => {
     const matrix = [
-        // ...matrixTranspose(vertices),
-        ...point.map((_value, index) => {
-            return vertices.map((value) => value[index]);
-        }),
+        ...matrixTranspose(vertices),
         [...point.map(() => 1), 1],
     ];
 

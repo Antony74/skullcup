@@ -46,6 +46,8 @@ export const matrixTranspose = <N extends TupleSize, M extends TupleSize>(
     matrix: Matrix<N, M>
 ): Matrix<M, N> => {
     return tupleMap(matrix[0], (_value, m) => {
-        return tupleMap(matrix, (_vector, n) => matrix[m][n]);
+        return tupleMap(matrix, (_vector, n) => {
+            return matrix[n][m];
+        });
     });
 };
