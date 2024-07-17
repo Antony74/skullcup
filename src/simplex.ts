@@ -12,20 +12,27 @@
 
 //import { Add } from 'ts-arithmetic';
 import { solve } from './linalg';
-import { Vector, TupleSize, Matrix, matrixTranspose } from './tuples';
+import {
+    Vector,
+    TupleSize,
+    Matrix,
+    matrixTranspose,
+    tupleAppend,
+    tupleMap,
+} from './tuples';
 
 export const pointInSimplex = async <N extends TupleSize, M extends TupleSize>(
     vertices: Matrix<N, M>,
     point: Vector<N>
 ) => {
-    const matrix = [
-        ...matrixTranspose(vertices),
-        [...point.map(() => 1), 1],
-    ];
+    const matrix: Matrix<M, N> = tupleAppend(
+        matrixTranspose(vertices),
+        tupleMap(vertices, () => 1)
+    );
 
-    const vector = [...point, 1];
+    const vector = tupleAppend<number, N, M>(point, 1);
 
-    const barycentricCoords = await solve<2, 3>(matrix as any, vector as any);
+    const barycentricCoords = await solve(matrix, vector);
 
     return (
         barycentricCoords.every((value) => value >= 0) &&
