@@ -10,13 +10,14 @@
 //         return False
 //     return np.all(barycentric_coords >= 0) and np.isclose(barycentric_coords.sum(), 1)
 
-import { Add } from 'ts-arithmetic';
-import { Matrix, NumberTuple } from './tuples';
+//import { Add } from 'ts-arithmetic';
 import { solve } from './linalg';
+import { Vector, TupleSize, Matrix } from './tuples';
 
-export const pointInSimplex = (vertices: number[][], point: number[]) => {
-    console.log(vertices[0]);
-
+export const pointInSimplex = async <N extends TupleSize, M extends TupleSize>(
+    vertices: Matrix<N, M>,
+    point: Vector<N>
+) => {
     const matrix = [
         ...point.map((_value, index) => {
             return vertices.map((value) => value[index]);
@@ -26,7 +27,10 @@ export const pointInSimplex = (vertices: number[][], point: number[]) => {
 
     const vector = [...point, 1];
 
-    console.log(JSON.stringify({ matrix, vector }, null, 4));
+    const barycentricCoords = await solve<2, 3>(matrix as any, vector as any);
 
-    return solve<2, 3>(matrix as any, vector as any);
+    return (
+        barycentricCoords.every((value) => value >= 0) &&
+        barycentricCoords.reduce((acc, value) => acc + value, 0) === 1
+    );
 };

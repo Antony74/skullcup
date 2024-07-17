@@ -1,10 +1,10 @@
-import { getPyodide } from "./pyodide";
-import { Matrix, NumberTuple } from "./tuples";
+import { getPyodide } from './pyodide';
+import { Matrix, Vector, TupleSize } from './tuples';
 
-export const solve = async <N extends number, M extends number>(
+export const solve = async <N extends TupleSize, M extends TupleSize>(
     matrix: Matrix<N, M>,
-    vector: NumberTuple<N>
-): Promise<NumberTuple<N>> => {
+    vector: Vector<N>
+): Promise<Vector<N>> => {
     const pyodide = await getPyodide();
 
     pyodide.globals.set('matrix', matrix);
