@@ -1,7 +1,7 @@
 import { getPyodide } from './pyodide';
-import { Matrix, Vector, TupleSize } from './tuples';
+import { Matrix, Vector } from './tuples';
 
-export const solve = async <N extends TupleSize, M extends TupleSize>(
+export const solve = async <N extends number, M extends number>(
     matrix: Matrix<N, M>,
     vector: Vector<N>
 ): Promise<Vector<N>> => {

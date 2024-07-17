@@ -4,7 +4,7 @@
 // I can't see myself ever using more than three dimensions in earnest or four playfully,
 // anyway.
 
-export type TupleSize = 2 | 3 | 4 | 5;
+import { Add } from 'ts-arithmetic';
 
 export type Tuple2<T> = [T, T];
 export type Tuple3<T> = [T, T, T];
@@ -12,7 +12,7 @@ export type Tuple4<T> = [T, T, T, T];
 export type Tuple5<T> = [T, T, T, T, T];
 export type Tuple6<T> = [T, T, T, T, T, T];
 
-export type Tuple<T, N extends TupleSize> = N extends 2
+export type Tuple<T, N extends number> = N extends 2
     ? Tuple2<T>
     : N extends 3
     ? Tuple3<T>
@@ -24,24 +24,14 @@ export type Tuple<T, N extends TupleSize> = N extends 2
     ? Tuple6<T>
     : never;
 
-export type TuplePlusOne<T, N extends TupleSize> = N extends 2
-    ? Tuple3<T>
-    : N extends 3
-    ? Tuple4<T>
-    : N extends 4
-    ? Tuple5<T>
-    : N extends 5
-    ? Tuple6<T>
-    : never;
+export type Vector<N extends number> = Tuple<number, N>;
 
-export type Vector<N extends TupleSize> = Tuple<number, N>;
-
-export type Matrix<N extends TupleSize, M extends TupleSize> = Tuple<
+export type Matrix<N extends number, M extends number> = Tuple<
     Vector<N>,
     M
 >;
 
-export const tupleMap = <T1, T2, N extends TupleSize>(
+export const tupleMap = <T1, T2, N extends number>(
     tuple: Tuple<T1, N>,
     fn: (t: T1, index: number) => T2
 ): Tuple<T2, N> => {
@@ -52,14 +42,14 @@ export const tupleMap = <T1, T2, N extends TupleSize>(
     return result;
 };
 
-export const tupleAppend = <T, N1 extends TupleSize, N2 extends TupleSize>(
-    tuple: Tuple<T, N1>,
+export const tupleAppend = <T, N extends number>(
+    tuple: Tuple<T, N>,
     t: T
-): Tuple<T, N2> => {
-    return [...tuple, t] as unknown as Tuple<T, N2>;
+) => {
+    return [...tuple, t] as unknown as Tuple<T, Add<N, 1>>;
 };
 
-export const matrixTranspose = <N extends TupleSize, M extends TupleSize>(
+export const matrixTranspose = <N extends number, M extends number>(
     matrix: Matrix<N, M>
 ): Matrix<M, N> => {
     return tupleMap(matrix[0], (_value, m) => {
