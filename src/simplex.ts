@@ -20,8 +20,8 @@ import {
     tupleMap,
 } from './tuples';
 
-export const pointInSimplex = async <N extends number>(
-    vertices: Matrix<N, Add<N, 1>>,
+export const pointInSimplex = async <N extends number, M extends number>(
+    vertices: Matrix<N, M>,
     point: Vector<N>
 ) => {
     const matrix = tupleAppend(
@@ -29,9 +29,9 @@ export const pointInSimplex = async <N extends number>(
         tupleMap(vertices, () => 1)
     );
 
-    const vector = tupleAppend(point, 1);
+    const vector: Vector<Add<N, 1>> = tupleAppend(point, 1);
 
-    const barycentricCoords = await solve(matrix, vector);
+    const barycentricCoords = await solve<M, Add<N, 1>>(matrix, vector);
 
     return (
         barycentricCoords.every((value) => value >= 0) &&

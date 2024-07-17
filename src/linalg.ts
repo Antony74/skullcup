@@ -3,8 +3,8 @@ import { Matrix, Vector } from './tuples';
 
 export const solve = async <N extends number, M extends number>(
     matrix: Matrix<N, M>,
-    vector: Vector<N>
-): Promise<Vector<N>> => {
+    vector: Vector<M>
+): Promise<Vector<M>> => {
     const pyodide = await getPyodide();
 
     pyodide.globals.set('matrix', matrix);
