@@ -1,6 +1,18 @@
-import p5 from "p5";
+import p5 from 'p5';
 
-export const draggableVertices = (p: p5, vertices: p5.Vector[], vertexSize: number) => {
+export const draggableVertices = ({
+    p,
+    vertices,
+    vertexSize,
+    width,
+    height,
+}: {
+    p: p5;
+    vertices: p5.Vector[];
+    vertexSize: number;
+    width: number;
+    height: number;
+}) => {
     let dragIndex = -1;
 
     p.mousePressed = () => {
@@ -21,9 +33,9 @@ export const draggableVertices = (p: p5, vertices: p5.Vector[], vertexSize: numb
     p.mouseDragged = () => {
         const vertex = vertices[dragIndex];
         if (vertex) {
-            vertex.x = p.mouseX;
-            vertex.y = p.mouseY;
+            vertex.x = Math.max(0, Math.min(p.mouseX, width));
+            vertex.y = Math.max(0, Math.min(p.mouseY, height));
             p.loop();
         }
     };
-}
+};

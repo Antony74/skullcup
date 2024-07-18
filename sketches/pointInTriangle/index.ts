@@ -42,5 +42,5 @@ new p5((p: p5) => {
         p.noLoop();
     };
 
-    draggableVertices(p, vertices, vertexSize);
+    draggableVertices({ p, vertices, vertexSize, width, height });
 });
