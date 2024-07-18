@@ -13,11 +13,14 @@
         "singleQuote": true
     },
     "dependencies": {
-        "@types/node": "^20.14.10",
         "p5": "^1.6.0",
+        "pyodide": "^0.26.1"
+    },
+    "devDependencies": {
+        "@types/node": "^20.14.10",
+        "@types/p5": "^1.7.6",
         "parcel": "^2.8.3",
         "prettier": "^2.8.4",
-        "pyodide": "^0.26.1",
         "ts-arithmetic": "^0.1.1",
         "ts-node": "^10.9.2",
         "typescript": "^5.5.3"
