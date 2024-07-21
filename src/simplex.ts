@@ -22,11 +22,11 @@ import {
 
 export const pointInSimplex = async <N extends number, M extends number>(
     vertices: Matrix<N, M>,
-    point: Vector<N>
+    point: Vector<N>,
 ) => {
     const matrix = tupleAppend(
         matrixTranspose(vertices),
-        tupleMap(vertices, () => 1)
+        tupleMap(vertices, () => 1),
     );
 
     const vector: Vector<Add<N, 1>> = tupleAppend(point, 1);

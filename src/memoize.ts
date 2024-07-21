@@ -1,5 +1,5 @@
 export const memoize = <ParamsType extends Array<any>, ReturnType>(
-    fn: (...params: ParamsType) => ReturnType
+    fn: (...params: ParamsType) => ReturnType,
 ) => {
     const cache: Record<string, ReturnType> = {};
     return (...params: ParamsType) => {

@@ -7,7 +7,7 @@ export const drawTriangle = (
     p: p5,
     triangle: Triangle,
     fillColor: Tuple4<number>,
-    strokeColor: Tuple4<number> = [0, 0, 0, 0]
+    strokeColor: Tuple4<number> = [0, 0, 0, 0],
 ) => {
     p.push();
     p.stroke(...strokeColor);
@@ -19,7 +19,7 @@ export const drawTriangle = (
 };
 
 export const triangleAsTuples = (
-    triangle: Triangle
+    triangle: Triangle,
 ): Tuple3<Tuple2<number>> => {
     return tupleMap<p5.Vector, Tuple2<number>, 3>(triangle, (vector) => [
         vector.x,

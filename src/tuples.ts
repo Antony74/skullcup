@@ -15,25 +15,22 @@ export type Tuple6<T> = [T, T, T, T, T, T];
 export type Tuple<T, N extends number> = N extends 2
     ? Tuple2<T>
     : N extends 3
-    ? Tuple3<T>
-    : N extends 4
-    ? Tuple4<T>
-    : N extends 5
-    ? Tuple5<T>
-    : N extends 6
-    ? Tuple6<T>
-    : never;
+      ? Tuple3<T>
+      : N extends 4
+        ? Tuple4<T>
+        : N extends 5
+          ? Tuple5<T>
+          : N extends 6
+            ? Tuple6<T>
+            : never;
 
 export type Vector<N extends number> = Tuple<number, N>;
 
-export type Matrix<N extends number, M extends number> = Tuple<
-    Vector<N>,
-    M
->;
+export type Matrix<N extends number, M extends number> = Tuple<Vector<N>, M>;
 
 export const tupleMap = <T1, T2, N extends number>(
     tuple: Tuple<T1, N>,
-    fn: (t: T1, index: number) => T2
+    fn: (t: T1, index: number) => T2,
 ): Tuple<T2, N> => {
     const result = Array.from({ length: tuple.length }) as Tuple<T2, N>;
     for (let n = 0; n < tuple.length; ++n) {
@@ -42,15 +39,12 @@ export const tupleMap = <T1, T2, N extends number>(
     return result;
 };
 
-export const tupleAppend = <T, N extends number>(
-    tuple: Tuple<T, N>,
-    t: T
-) => {
+export const tupleAppend = <T, N extends number>(tuple: Tuple<T, N>, t: T) => {
     return [...tuple, t] as unknown as Tuple<T, Add<N, 1>>;
 };
 
 export const matrixTranspose = <N extends number, M extends number>(
-    matrix: Matrix<N, M>
+    matrix: Matrix<N, M>,
 ): Matrix<M, N> => {
     return tupleMap(matrix[0], (_value, m) => {
         return tupleMap(matrix, (_vector, n) => {

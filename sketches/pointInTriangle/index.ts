@@ -12,7 +12,7 @@ new p5((p: p5) => {
         const theta = p.map(index, 0, 6, 0, p.TWO_PI);
         return new p5.Vector(
             0.4 * width * Math.cos(theta),
-            0.4 * height * Math.sin(theta)
+            0.4 * height * Math.sin(theta),
         ).add(0.5 * width, 0.5 * height);
     });
 
