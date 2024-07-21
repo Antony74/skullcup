@@ -1,6 +1,6 @@
 import p5 from 'p5';
 import { pointInSimplex } from '../../src/simplex';
-import { drawTriangle, Triangle } from '../triangle';
+import { drawTriangle, Triangle, triangleAsTuples } from '../triangle';
 import { draggableVertices } from '../draggableVertices';
 
 new p5((p: p5) => {
@@ -29,15 +29,38 @@ new p5((p: p5) => {
         p.rectMode(p.RADIUS);
     };
 
-    p.draw = () => {
+    p.draw = async () => {
         p.background(255);
 
-        drawTriangle(p, getTriangle1(), [0, 255, 0, 128]);
-        drawTriangle(p, getTriangle2(), [0, 0, 255, 128]);
+        const tri1 = getTriangle1();
+        const tri2 = getTriangle2();
+
+        drawTriangle(p, tri1, [0, 255, 0, 128]);
+        drawTriangle(p, tri2, [0, 0, 255, 128]);
 
         p.fill(255, 0, 0, 192);
         p.noStroke();
-        vertices.forEach((v) => p.rect(v.x, v.y, vertexSize, vertexSize));
+
+        tri1.forEach(async (v) => {
+            const result = await pointInSimplex<2, 3>(triangleAsTuples(tri2), [
+                v.x,
+                v.y,
+            ]);
+
+            if (result) {
+                p.fill(255, 0, 0, 192);
+                p.noStroke();
+            } else {
+                p.fill(0, 255, 255, 192);
+                p.noStroke();
+            }
+
+            p.rect(v.x, v.y, vertexSize, vertexSize);
+        });
+
+        tri2.forEach((v) => {
+            p.rect(v.x, v.y, vertexSize, vertexSize);
+        });
 
         p.noLoop();
     };
