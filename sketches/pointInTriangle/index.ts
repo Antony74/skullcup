@@ -41,28 +41,29 @@ new p5((p: p5) => {
         p.fill(255, 0, 0, 192);
         p.noStroke();
 
-        tri1.forEach(async (v) => {
+        p.noLoop();
+
+        for (const v of tri1) {
             const result = await pointInSimplex<2, 3>(triangleAsTuples(tri2), [
                 v.x,
                 v.y,
             ]);
 
             if (result) {
-                p.fill(255, 0, 0, 192);
+                p.fill(0, 255, 255, 192);
                 p.noStroke();
             } else {
-                p.fill(0, 255, 255, 192);
+                p.fill(255, 0, 0, 192);
                 p.noStroke();
             }
 
             p.rect(v.x, v.y, vertexSize, vertexSize);
-        });
+        }
 
         tri2.forEach((v) => {
+            p.fill(255, 0, 0, 192);
             p.rect(v.x, v.y, vertexSize, vertexSize);
         });
-
-        p.noLoop();
     };
 
     draggableVertices({ p, vertices, vertexSize, width, height });
