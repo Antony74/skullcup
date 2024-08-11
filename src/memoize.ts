@@ -12,7 +12,7 @@ const memoizeExposed = <ParamsType extends Array<any>, ReturnType>(
                 const result = fn(...params);
                 cache[key] = result;
                 if (result instanceof Promise) {
-                    return new Promise((resolve) => {
+                    return new Promise<ReturnType>((resolve) => {
                         result.then((value) => {
                             cache[key] = value;
                             resolve(value);
