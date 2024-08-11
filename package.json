@@ -5,7 +5,8 @@
         "postinstall": "ts-node src/postInstall.ts",
         "pointInTriangle": "parcel sketches/pointInTriangle/index.html",
         "prettier": "prettier . --write",
-        "start": "ts-node src/index.ts"
+        "start": "ts-node src/index.ts",
+        "test": "jest"
     },
     "author": "Antony74",
     "license": "GPL-3.0-only",
@@ -18,6 +19,7 @@
         "pyodide": "^0.26.1"
     },
     "devDependencies": {
+        "@types/jest": "^29.5.12",
         "@types/node": "^20.14.11",
         "@types/p5": "^1.7.6",
         "buffer": "^6.0.3",
@@ -28,6 +30,7 @@
         "prettier": "^3.3.3",
         "process": "^0.11.10",
         "ts-arithmetic": "^0.1.1",
+        "ts-jest": "^29.2.4",
         "ts-node": "^10.9.2",
         "typescript": "^5.5.3",
         "url": "^0.11.3"
