@@ -1,14 +1,23 @@
 const memoizeExposed = <ParamsType extends Array<any>, ReturnType>(
-    fn: (...params: ParamsType) => ReturnType,
+    fn: (...params: ParamsType) => ReturnType | Promise<ReturnType>,
 ) => {
-    const cache: Record<string, ReturnType> = {};
+    const cache: Record<string, ReturnType | Promise<ReturnType>> = {};
 
     return {
         fn: (...params: ParamsType) => {
             const key = JSON.stringify(params);
-            return cache[key] ? cache[key] : (cache[key] = fn(...params));
+            if (cache[key]) {
+                return cache[key];
+            } else {
+                const result = fn(...params);
+                if (result instanceof Promise) {
+                    result.then((value) => (cache[key] = value));
+                }
+                cache[key] = result;
+                return result;
+            }
         },
-        getCache: (): Record<string, ReturnType> => {
+        getCache: () => {
             return cache;
         },
     };
