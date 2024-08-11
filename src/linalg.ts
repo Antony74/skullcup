@@ -1,18 +1,17 @@
-import { getPyodide } from './pyodide';
+import { getPyodide, PyodideInstanceNames } from './pyodide';
 import { Matrix, Vector } from './tuples';
 
 export const solve = async <N extends number, M extends number>(
     matrix: Matrix<N, M>,
     vector: Vector<M>,
 ): Promise<Vector<M>> => {
-    const pyodide = await getPyodide();
+    const pyodide = await getPyodide(PyodideInstanceNames.sole);
 
-    pyodide.globals.set('matrix', matrix);
-    pyodide.globals.set('vector', vector);
-
-    const result = await pyodide.runPythonAsync(
-        `np.linalg.solve(matrix, vector)`,
+    return new Promise((resolve) =>
+        pyodide.pushJob({
+            globals: { matrix, vector },
+            code: `np.linalg.solve(matrix, vector)`,
+            resolve,
+        }),
     );
-
-    return result.toJs();
 };
