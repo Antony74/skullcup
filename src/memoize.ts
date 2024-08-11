@@ -6,17 +6,21 @@ const memoizeExposed = <ParamsType extends Array<any>, ReturnType>(
     return {
         fn: (...params: ParamsType) => {
             const key = JSON.stringify(params);
-            if (cache[key]!== undefined) {
+            if (cache[key] !== undefined) {
                 return cache[key];
             } else {
                 const result = fn(...params);
-                if (result instanceof Promise) {
-                    result.then((value) => {
-                        cache[key] = value;
-                    });
-                }
                 cache[key] = result;
-                return result;
+                if (result instanceof Promise) {
+                    return new Promise((resolve) => {
+                        result.then((value) => {
+                            cache[key] = value;
+                            resolve(value);
+                        });
+                    });
+                } else {
+                    return result;
+                }
             }
         },
         getCache: () => {

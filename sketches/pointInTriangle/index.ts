@@ -74,21 +74,23 @@ new p5((p: p5) => {
             p.rect(vec.x, vec.y, vertexSize, vertexSize);
         }
 
-        tri1.forEach((v) => {
-            const result = pointInTriangle(triangleAsTuples(tri2), [
-                v.vec.x,
-                v.vec.y,
-            ]);
+        [
+            [tri1, tri2],
+            [tri2, tri1],
+        ].forEach(([triA, triB]) => {
+            triA.forEach((v) => {
+                const result = pointInTriangle(triangleAsTuples(triB), [
+                    v.vec.x,
+                    v.vec.y,
+                ]);
 
-            if (result instanceof Promise) {
-                result.then(async () => {
-                    await new Promise((resolve) => setTimeout(resolve, 100));
+                if (result instanceof Promise) {
+                    result.then(() => p.loop());
+                } else {
+                    v.state = result ? VertexState.inside : VertexState.outside;
                     p.loop();
-                });
-            } else {
-                v.state = result ? VertexState.inside : VertexState.outside;
-                p.loop();
-            }
+                }
+            });
         });
 
         p.noLoop();
