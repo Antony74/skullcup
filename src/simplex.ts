@@ -21,8 +21,8 @@ import {
 } from './tuples';
 
 export const pointInSimplex = async <N extends number, M extends number>(
-    vertices: Matrix<N, M>,
     point: Vector<N>,
+    vertices: Matrix<N, M>,
 ) => {
     const matrix = tupleAppend(
         matrixTranspose(vertices),
@@ -35,8 +35,5 @@ export const pointInSimplex = async <N extends number, M extends number>(
 
     const sum = barycentricCoords.reduce((acc, value) => acc + value, 0);
 
-    return (
-        barycentricCoords.every((value) => value >= 0) &&
-        sum >= 0.99
-    );
+    return barycentricCoords.every((value) => value >= 0) && sum >= 0.99;
 };

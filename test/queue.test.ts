@@ -1,4 +1,4 @@
-import { createEmptyQueue } from "../src/queue";
+import { createEmptyQueue } from '../src/queue';
 
 describe('Queue', () => {
     it('can create an empty queue', () => {
@@ -30,4 +30,4 @@ describe('Queue', () => {
         expect(result).toEqual('Hello there');
         expect(q.front()).toEqual('General Kenobi');
     });
-})
+});

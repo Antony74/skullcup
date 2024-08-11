@@ -79,10 +79,10 @@ new p5((p: p5) => {
             [tri2, tri1],
         ].forEach(([triA, triB]) => {
             triA.forEach((v) => {
-                const result = pointInTriangle(triangleAsTuples(triB), [
-                    v.vec.x,
-                    v.vec.y,
-                ]);
+                const result = pointInTriangle(
+                    [v.vec.x, v.vec.y],
+                    triangleAsTuples(triB),
+                );
 
                 if (result instanceof Promise) {
                     result.then(() => p.loop());

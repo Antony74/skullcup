@@ -11,11 +11,11 @@ const main = async () => {
     const pointInside: Vector<2> = [0.25, 0.25];
     const pointOutside: Vector<2> = [1, 1];
 
-    const result1 = await pointInSimplex<2, 3>(vertices, pointInside);
+    const result1 = await pointInSimplex<2, 3>(pointInside, vertices);
 
     console.log(result1); // true
 
-    const result2 = await pointInSimplex<2, 3>(vertices, pointOutside);
+    const result2 = await pointInSimplex<2, 3>(pointOutside, vertices);
 
     console.log(result2); // false
 };
