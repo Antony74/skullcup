@@ -6,12 +6,14 @@ const memoizeExposed = <ParamsType extends Array<any>, ReturnType>(
     return {
         fn: (...params: ParamsType) => {
             const key = JSON.stringify(params);
-            if (cache[key]) {
+            if (cache[key]!== undefined) {
                 return cache[key];
             } else {
                 const result = fn(...params);
                 if (result instanceof Promise) {
-                    result.then((value) => (cache[key] = value));
+                    result.then((value) => {
+                        cache[key] = value;
+                    });
                 }
                 cache[key] = result;
                 return result;
@@ -24,17 +26,18 @@ const memoizeExposed = <ParamsType extends Array<any>, ReturnType>(
 };
 
 export const memoize = <ParamsType extends Array<any>, ReturnType>(
-    fn: (...params: ParamsType) => ReturnType,
+    fn: (...params: ParamsType) => ReturnType | Promise<ReturnType>,
 ) => memoizeExposed(fn).fn;
 
 export const memoizeBounded = <ParamsType extends Array<any>, ReturnType>(
-    fn: (...params: ParamsType) => ReturnType,
+    fn: (...params: ParamsType) => ReturnType | Promise<ReturnType>,
     maxSize: number,
 ) => {
     const base = memoizeExposed(fn);
 
     return (...params: ParamsType) => {
         const result = base.fn(...params);
+
         const cache = base.getCache();
 
         const keys = Object.keys(cache);

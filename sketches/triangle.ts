@@ -1,7 +1,7 @@
 import p5 from 'p5';
 import { Tuple2, Tuple3, Tuple4, tupleMap } from '../src/tuples';
 
-export type Triangle = Tuple3<p5.Vector>;
+export type Triangle = Tuple3<{vec: p5.Vector}>;
 
 export const drawTriangle = (
     p: p5,
@@ -13,7 +13,7 @@ export const drawTriangle = (
     p.stroke(...strokeColor);
     p.fill(...fillColor);
     p.beginShape();
-    triangle.forEach((vertex) => p.vertex(vertex.x, vertex.y));
+    triangle.forEach((vertex) => p.vertex(vertex.vec.x, vertex.vec.y));
     p.endShape('close');
     p.pop();
 };
@@ -21,8 +21,8 @@ export const drawTriangle = (
 export const triangleAsTuples = (
     triangle: Triangle,
 ): Tuple3<Tuple2<number>> => {
-    return tupleMap<p5.Vector, Tuple2<number>, 3>(triangle, (vector) => [
-        vector.x,
-        vector.y,
+    return tupleMap<{vec: p5.Vector}, Tuple2<number>, 3>(triangle, (vertex) => [
+        vertex.vec.x,
+        vertex.vec.y,
     ]);
 };
