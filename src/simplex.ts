@@ -33,8 +33,10 @@ export const pointInSimplex = async <N extends number, M extends number>(
 
     const barycentricCoords = await solve<M, Add<N, 1>>(matrix, vector);
 
+    const sum = barycentricCoords.reduce((acc, value) => acc + value, 0);
+
     return (
         barycentricCoords.every((value) => value >= 0) &&
-        barycentricCoords.reduce((acc, value) => acc + value, 0) === 1
+        sum >= 0.99
     );
 };
