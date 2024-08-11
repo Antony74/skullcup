@@ -44,7 +44,7 @@ export const getPyodide = memoize(
                 );
 
                 const result = await pyodide.runPythonAsync(job.code);
-                job.resolve(result);
+                job.resolve(result.toJs());
             }
 
             running = false;
